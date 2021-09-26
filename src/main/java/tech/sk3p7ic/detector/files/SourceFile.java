@@ -32,9 +32,6 @@ public class SourceFile {
   public void generateClassFromFile() {
     try {
       fileClass = reader.getClassFromFile();
-      for (Integer entry : fileClass.keySet()) {
-        System.out.println(entry + ": " + fileClass.get(entry));
-      }
       Object[] lineIndexSet = fileClass.keySet().toArray(); // Used to get first and last line numbers
       fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_CLASS, (int)lineIndexSet[0],
               (int)lineIndexSet[fileClass.size() - 1], fileClass));
