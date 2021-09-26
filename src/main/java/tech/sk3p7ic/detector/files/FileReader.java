@@ -1,4 +1,4 @@
-package tech.sk3p7ic.detector;
+package tech.sk3p7ic.detector.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,8 +49,14 @@ public class FileReader {
     while (!bracesStack.empty()) { // While the closing brace of the class definition has not been popped
       String line = fileLines.get(lineIndex); // Get the current line
       classLines.put(lineIndex, line);
-      if (line.contains("{") && !isBraceInString(line)) bracesStack.push('{');
-      if (line.contains("}") && !isBraceInString(line)) bracesStack.pop();
+      if (line.contains("{") && !isBraceInString(line, false)) {
+        bracesStack.push('{');
+        System.out.println(line + "\n\tPUSH\t" + bracesStack.size());
+      }
+      if (line.contains("}") && !isBraceInString(line, true)) {
+        bracesStack.pop();
+        System.out.println(line + "\n\tPOP\t" + bracesStack.size());
+      }
       lineIndex++;
     }
     return classLines;
@@ -82,8 +88,8 @@ public class FileReader {
         while (!bracesStack.empty()) { // While the closing brace of the method has not been popped
           String methodLine = classLines.get(lineIndex); // Get the current line
           methodLines.put(lineIndex, methodLine);
-          if (methodLine.contains("{") && !isBraceInString(methodLine)) bracesStack.push('{');
-          if (methodLine.contains("}") && !isBraceInString(methodLine)) bracesStack.pop();
+          if (methodLine.contains("{") && !isBraceInString(methodLine, false)) bracesStack.push('{');
+          if (methodLine.contains("}") && !isBraceInString(methodLine, true)) bracesStack.pop();
           lineIndex++;
         }
         methodList.add(methodLines);
@@ -115,7 +121,7 @@ public class FileReader {
    * @param line The line that you want to check.
    * @return Whether a curly brace is in a string, unless there's another outside the string for another block of code.
    */
-  private boolean isBraceInString(final String line) {
+  private boolean isBraceInString(final String line, final boolean checkingClosingBrace) {
     boolean isBraceInString; // Flag for if there's a curly brace in the line
     String openingRegex = "\".*\\{.*\""; // Regex for if there's an opening brace in a String / Character
     String closingRegex = "\".*}.*\""; // Regex for if there's a closing curly brace in a String / Character
@@ -136,7 +142,7 @@ public class FileReader {
       isBraceInString = openingMatcher.find();
       if (!isBraceInString) isBraceInString = closingMatcher.find();
     }
-    if (isBraceInString) { // Check to make sure it's not a line that starts another block of code
+    if (isBraceInString && !checkingClosingBrace) { // Check to make sure it's not a line that starts another block of code
       String justInCaseRegex = " \\{.*";
       Pattern pattern = Pattern.compile(justInCaseRegex);
       Matcher matcher = pattern.matcher(line);

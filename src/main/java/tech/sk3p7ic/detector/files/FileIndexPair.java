@@ -1,4 +1,4 @@
-package tech.sk3p7ic.detector;
+package tech.sk3p7ic.detector.files;
 
 import java.util.Map;
 
