@@ -10,10 +10,12 @@ import java.util.regex.Pattern;
 public class FileReader {
   private File sourceFile; // The file that will be read
 
-  private FileReader() {} // Get rid of default no-arg constructor // TODO: Detect one-liner functions
+  private FileReader() {
+  } // Get rid of default no-arg constructor // TODO: Detect one-liner functions
 
   /**
    * Create a new FileReader object to read and interpret the contents of a .java file.
+   *
    * @param sourceFile The .java file that will be read.
    */
   public FileReader(File sourceFile) {
@@ -22,6 +24,7 @@ public class FileReader {
 
   /**
    * Get the main class from the provided file.
+   *
    * @return A map containing the indexes of each line in the class and their contents on each line.
    * @throws IOException If the input source file cannot be read.
    */
@@ -60,6 +63,7 @@ public class FileReader {
 
   /**
    * Gets the methods contained within a given class.
+   *
    * @param classLines A map of line indexes and line strings that will be searched for methods.
    * @return A List of Maps of line indexes and their respective lines for each detected method.
    */
@@ -100,6 +104,7 @@ public class FileReader {
 
   /**
    * Gets the methods from a file.
+   *
    * @return A List containing maps containing line indexes and strings of lines in the detected method.
    * @throws IOException If the source file cannot be opened or read.
    */
@@ -107,8 +112,15 @@ public class FileReader {
     return getMethodsFromFile(getClassFromFile()); // Get the class lines and return the methods
   }
 
+  public List<Map<Integer, String>> getForLoopsFromMethod(Map<Integer, String> methodLines) {
+    List<Map<Integer, String>> forLoopList = new ArrayList<>();
+    // Code
+    return forLoopList;
+  }
+
   /**
    * Used to get the filename without the extension.
+   *
    * @return The name of the source file without the extension.
    */
   private String getFileName() {
@@ -118,6 +130,7 @@ public class FileReader {
 
   /**
    * Checks whether a curly brace is contained within a string.
+   *
    * @param line The line that you want to check.
    * @return Whether a curly brace is in a string, unless there's another outside the string for another block of code.
    */
@@ -153,6 +166,7 @@ public class FileReader {
 
   /**
    * Checks whether a given line is a method or not based off of if there is an '=' in the line.
+   *
    * @param line The line that you want to check.
    * @return Whether the line is a method signature or not.
    */
