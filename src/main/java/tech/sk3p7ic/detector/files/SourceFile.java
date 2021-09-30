@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SourceFile {
   private static Logger logger = LoggerFactory.getLogger(SourceFile.class);
@@ -50,17 +48,61 @@ public class SourceFile {
     }
   }
 
-  public void generateLoopsFromMethod() {
-    for (FileIndexPair fileIndexPair : fileIndexPairs) {
-      if (fileIndexPair.fileIndexType == FileIndexType.TYPE_METHOD) {
-        List<Map<Integer, String>> forLoopsList = reader.getLoopsFromMethod(fileIndexPair.content);
+  /**
+   * Gets the for and while loops from the source file.
+   * @param startingIndexSet A set used to ensure that the loops are not added twice.
+   */
+  public void generateLoopsFromMethod(Set<Integer> startingIndexSet) {
+    // Get the current pairs list
+    Object[] currentPairs = fileIndexPairs.toArray(); // Stored in this manner to avoid ConcurrentModificationException
+    // Iterate through the pairs
+    for (Object fileIndexPairObject : currentPairs) {
+      FileIndexPair fileIndexPair = (FileIndexPair) fileIndexPairObject; // Cast Object so that we may work with it
+      // If the pair is a method, run loop detection inside of it
+      if (fileIndexPair.fileIndexType != FileIndexType.TYPE_CLASS) {
+        // Detect for loops
+        List<Map<Integer, String>> forLoopsList;
+        try {
+          forLoopsList = reader.getLoopsFromContent(fileIndexPair.content,
+                  FileIndexType.TYPE_FOR_LOOP);
+        } catch (IllegalArgumentException e) {
+          logger.error(e.getMessage());
+          continue;
+        }
         for (Map<Integer, String> forLoop : forLoopsList) {
-          Object[] lineIndexSet = forLoop.keySet().toArray();
-          fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_FOR_LOOP, (int) lineIndexSet[0],
-                  (int) lineIndexSet[forLoop.size() - 1], forLoop));
+          Object[] forLineIndexSet = forLoop.keySet().toArray();
+          if (startingIndexSet.contains(forLineIndexSet[0])) continue; // If the loop has already been added, skip it
+          else startingIndexSet.add((int) forLineIndexSet[0]); // If the loop has not been added, add it to the set
+          fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_FOR_LOOP, (int) forLineIndexSet[0],
+                  (int) forLineIndexSet[forLoop.size() - 1], forLoop));
+        }
+        // Detect while loops
+        List<Map<Integer, String>> whileLoopsList;
+        try {
+          whileLoopsList = reader.getLoopsFromContent(fileIndexPair.content,
+                  FileIndexType.TYPE_WHILE_LOOP);
+        } catch (IllegalArgumentException e) {
+          logger.error(e.getMessage());
+          continue;
+        }
+        for (Map<Integer, String> whileLoop : whileLoopsList) {
+          Object[] whileLineIndexSet = whileLoop.keySet().toArray();
+          if (startingIndexSet.contains(whileLineIndexSet[0])) continue;
+          else startingIndexSet.add((int) whileLineIndexSet[0]);
+          fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_WHILE_LOOP, (int) whileLineIndexSet[0],
+                  (int) whileLineIndexSet[whileLoop.size() - 1], whileLoop));
         }
       }
     }
+    // Retry generation until there's been no new data added
+    if (fileIndexPairs.size() != currentPairs.length) generateLoopsFromMethod(startingIndexSet);
+  }
+
+  /**
+   * Gets the for and while loops from the given source file.
+   */
+  public void generateLoopsFromMethod() {
+    generateLoopsFromMethod(new HashSet<>());
   }
 
   /**
@@ -69,8 +111,13 @@ public class SourceFile {
   public void generateAll() {
     generateClassFromFile();
     generateMethodsFromFile();
+    generateLoopsFromMethod();
   }
 
+  /**
+   * Gets the list of FileIndexPair objects that have been created.
+   * @return A List containing FileIndexPair objects created through reading the source file.
+   */
   public List<FileIndexPair> getFileIndexPairs() {
     return fileIndexPairs;
   }

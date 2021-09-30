@@ -11,7 +11,7 @@ public class FileReader {
   private File sourceFile; // The file that will be read
 
   private FileReader() {
-  } // Get rid of default no-arg constructor // TODO: Detect one-liner functions
+  } // Get rid of default no-arg constructor
 
   /**
    * Create a new FileReader object to read and interpret the contents of a .java file.
@@ -110,17 +110,25 @@ public class FileReader {
     return getMethodsFromFile(getClassFromFile()); // Get the class lines and return the methods
   }
 
-  public List<Map<Integer, String>> getLoopsFromMethod(Map<Integer, String> methodLines) {
+  /**
+   * Gets the for or while loops from a method, depending on the FileIndexType passed to the function.
+   * @param contentLines The lines for the given content.
+   * @param type The FileIndexType to detect. Assumes that if given type is not 'TYPE_FOR_LOOP', then 'TYPE_WHILE_LOOP'
+   *             is meant.
+   * @return A list containing maps of the line numbers and lines contained in each loop.
+   */
+  public List<Map<Integer, String>> getLoopsFromContent(Map<Integer, String> contentLines, FileIndexType type) {
     List<Map<Integer, String>> loopList = new ArrayList<>();
-    for (Map.Entry<Integer, String> lineEntry : methodLines.entrySet()) {
+    for (Map.Entry<Integer, String> lineEntry : contentLines.entrySet()) {
       String line = lineEntry.getValue();
-      if (line.contains("for (") || line.contains("while (")) { // If line contains the start of a for / while loop
+      String detectionString = (type == FileIndexType.TYPE_FOR_LOOP) ? "for (" : "while (";
+      if (line.contains(detectionString)) { // If line contains the start of a for / while loop
         Map<Integer, String> loopLines = new LinkedHashMap<>();
         int lineIndex = lineEntry.getKey(); // Get the starting line index
         loopLines.put(lineIndex, line); // Add the line to the map
-        while (!methodLines.get(lineIndex).contains("{")) { // Loop until the opening brace is in the line
+        while (!contentLines.get(lineIndex).contains("{")) { // Loop until the opening brace is in the line
           lineIndex++;
-          loopLines.put(lineIndex, methodLines.get(lineIndex));
+          loopLines.put(lineIndex, contentLines.get(lineIndex));
         }
         if (loopLines.get(lineIndex).contains("}")) {
           loopList.add(loopLines);
@@ -130,7 +138,7 @@ public class FileReader {
         Stack<Character> bracesStack = new Stack<>();
         bracesStack.add('{');
         while (!bracesStack.empty()) {
-          String loopLine = methodLines.get(lineIndex);
+          String loopLine = contentLines.get(lineIndex);
           loopLines.put(lineIndex, loopLine);
           if (loopLine.contains("{") && braceIsValid(loopLine, false)) bracesStack.push('{');
           if (loopLine.contains("}") && braceIsValid(loopLine, true)) bracesStack.pop();
@@ -141,7 +149,6 @@ public class FileReader {
     }
     return loopList;
   }
-
   /**
    * Used to get the filename without the extension.
    *
