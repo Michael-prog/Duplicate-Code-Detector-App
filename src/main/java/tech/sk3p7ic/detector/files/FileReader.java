@@ -112,9 +112,10 @@ public class FileReader {
 
   /**
    * Gets the for or while loops from a method, depending on the FileIndexType passed to the function.
+   *
    * @param contentLines The lines for the given content.
-   * @param type The FileIndexType to detect. Assumes that if given type is not 'TYPE_FOR_LOOP', then 'TYPE_WHILE_LOOP'
-   *             is meant.
+   * @param type         The FileIndexType to detect. Assumes that if given type is not 'TYPE_FOR_LOOP', then 'TYPE_WHILE_LOOP'
+   *                     is meant.
    * @return A list containing maps of the line numbers and lines contained in each loop.
    */
   public List<Map<Integer, String>> getLoopsFromContent(Map<Integer, String> contentLines, FileIndexType type) {
@@ -149,6 +150,7 @@ public class FileReader {
     }
     return loopList;
   }
+
   /**
    * Used to get the filename without the extension.
    *

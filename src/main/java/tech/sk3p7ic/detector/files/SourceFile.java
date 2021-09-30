@@ -50,6 +50,7 @@ public class SourceFile {
 
   /**
    * Gets the for and while loops from the source file.
+   *
    * @param startingIndexSet A set used to ensure that the loops are not added twice.
    */
   public void generateLoopsFromMethod(Set<Integer> startingIndexSet) {
@@ -116,6 +117,7 @@ public class SourceFile {
 
   /**
    * Gets the list of FileIndexPair objects that have been created.
+   *
    * @return A List containing FileIndexPair objects created through reading the source file.
    */
   public List<FileIndexPair> getFileIndexPairs() {

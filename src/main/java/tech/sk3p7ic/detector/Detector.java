@@ -13,7 +13,8 @@ public class Detector {
   private SourceFile file1;
   private SourceFile file2;
 
-  private Detector() {}
+  private Detector() {
+  }
 
   public Detector(SourceFile file1, SourceFile file2) {
     this.file1 = file1;
@@ -26,6 +27,7 @@ public class Detector {
 
   /**
    * Calls the SourceFile methods to read the files and get the various items contained within them.
+   *
    * @return A list of List<FileIndexPair> of size 2 for file1 and file2, respectively.
    */
   public List[] readFilesForItems() {
@@ -35,7 +37,7 @@ public class Detector {
   }
 
   public Map<FileIndexPair, Integer> generateSimilarityScores(List<FileIndexPair>[] pairs)
-      throws IllegalArgumentException {
+          throws IllegalArgumentException {
     if (pairs.length != 2)
       throw new IllegalArgumentException("Size of pairs does not equal 2: (" + pairs.length + ")..!");
     List<FileIndexPair> pair1 = pairs[0];
@@ -44,5 +46,6 @@ public class Detector {
     for (FileIndexType fileIndexType : FileIndexType.values()) {
       System.out.println(fileIndexType);
     }
+    return new HashMap<>();
   }
 }
