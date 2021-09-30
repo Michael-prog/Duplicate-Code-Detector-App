@@ -76,8 +76,6 @@ public class FileReader {
         Map<Integer, String> methodLines = new LinkedHashMap<>(); // Stores the lines of the method
         int lineIndex = lineEntry.getKey(); // Get the current line index
         methodLines.put(lineIndex, line); // Add the line to the method lines
-        // TODO: Maybe replace with `while (!line.contains("{")) to get the start of the method
-        // TODO: Require '{' to determine if code is a method definition
         while (!classLines.get(lineIndex).contains("{")) {
           lineIndex++;
           methodLines.put(lineIndex, classLines.get(lineIndex));
@@ -112,10 +110,36 @@ public class FileReader {
     return getMethodsFromFile(getClassFromFile()); // Get the class lines and return the methods
   }
 
-  public List<Map<Integer, String>> getForLoopsFromMethod(Map<Integer, String> methodLines) {
-    List<Map<Integer, String>> forLoopList = new ArrayList<>();
-    // Code
-    return forLoopList;
+  public List<Map<Integer, String>> getLoopsFromMethod(Map<Integer, String> methodLines) {
+    List<Map<Integer, String>> loopList = new ArrayList<>();
+    for (Map.Entry<Integer, String> lineEntry : methodLines.entrySet()) {
+      String line = lineEntry.getValue();
+      if (line.contains("for (") || line.contains("while (")) { // If line contains the start of a for / while loop
+        Map<Integer, String> loopLines = new LinkedHashMap<>();
+        int lineIndex = lineEntry.getKey(); // Get the starting line index
+        loopLines.put(lineIndex, line); // Add the line to the map
+        while (!methodLines.get(lineIndex).contains("{")) { // Loop until the opening brace is in the line
+          lineIndex++;
+          loopLines.put(lineIndex, methodLines.get(lineIndex));
+        }
+        if (loopLines.get(lineIndex).contains("}")) {
+          loopList.add(loopLines);
+          continue;
+        }
+        lineIndex++;
+        Stack<Character> bracesStack = new Stack<>();
+        bracesStack.add('{');
+        while (!bracesStack.empty()) {
+          String loopLine = methodLines.get(lineIndex);
+          loopLines.put(lineIndex, loopLine);
+          if (loopLine.contains("{") && braceIsValid(loopLine, false)) bracesStack.push('{');
+          if (loopLine.contains("}") && braceIsValid(loopLine, true)) bracesStack.pop();
+          lineIndex++;
+        }
+        loopList.add(loopLines);
+      }
+    }
+    return loopList;
   }
 
   /**

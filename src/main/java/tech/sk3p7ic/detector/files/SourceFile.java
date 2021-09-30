@@ -50,10 +50,10 @@ public class SourceFile {
     }
   }
 
-  public void generateForLoopsFromMethod() {
+  public void generateLoopsFromMethod() {
     for (FileIndexPair fileIndexPair : fileIndexPairs) {
       if (fileIndexPair.fileIndexType == FileIndexType.TYPE_METHOD) {
-        List<Map<Integer, String>> forLoopsList = reader.getForLoopsFromMethod(fileIndexPair.content);
+        List<Map<Integer, String>> forLoopsList = reader.getLoopsFromMethod(fileIndexPair.content);
         for (Map<Integer, String> forLoop : forLoopsList) {
           Object[] lineIndexSet = forLoop.keySet().toArray();
           fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_FOR_LOOP, (int) lineIndexSet[0],
@@ -61,6 +61,14 @@ public class SourceFile {
         }
       }
     }
+  }
+
+  /**
+   * Generates all items, in order.
+   */
+  public void generateAll() {
+    generateClassFromFile();
+    generateMethodsFromFile();
   }
 
   public List<FileIndexPair> getFileIndexPairs() {
