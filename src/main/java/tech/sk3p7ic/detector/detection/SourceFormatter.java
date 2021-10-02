@@ -63,7 +63,6 @@ public class SourceFormatter {
   }
 
   public String findVarDefAndReplace(String line, Map<String, String> variableMap) {
-    // TODO: Detect variables that come after Something<Something>
     String regex = "([a-zA-Z]+ [a-zA-z0-9]+;)|([a-zA-Z]+ [a-zA-z0-9]+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(line);
