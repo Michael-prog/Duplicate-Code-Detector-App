@@ -1,5 +1,6 @@
 package tech.sk3p7ic.detector;
 
+import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 import tech.sk3p7ic.detector.detection.SourceFormatter;
 import tech.sk3p7ic.detector.files.FileIndexPair;
 import tech.sk3p7ic.detector.files.FileIndexType;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Detector {
+  private static SimilarityScoreManager scoreManager = new SimilarityScoreManager();
   private SourceFile file1;
   private SourceFile file2;
 
@@ -48,8 +50,19 @@ public class Detector {
     sourceFormatter.formatSourceInputList(pair2); // Remove comments and change variables to a more standard format
     // For each type, search the given pairs for all elements of that type and generate a similarity score.
     for (FileIndexType fileIndexType : FileIndexType.values()) {
-      System.out.println(fileIndexType);
+      for (FileIndexPair indexPair1 : pair1) {
+        if (indexPair1.fileIndexType != fileIndexType) continue;
+        for (FileIndexPair indexPair2 : pair2) {
+          if (indexPair2.fileIndexType != fileIndexType) continue;
+          scoreManager.addSimilarityScore(getScore(indexPair1, indexPair2), file1.getSourceFile(),
+              file2.getSourceFile(), indexPair1, indexPair2);
+        }
+      }
     }
     return new HashMap<>();
+  }
+
+  private int getScore(FileIndexPair indexPair1, FileIndexPair indexPair2) {
+    return 0; // TODO: Generate similarity scores.
   }
 }

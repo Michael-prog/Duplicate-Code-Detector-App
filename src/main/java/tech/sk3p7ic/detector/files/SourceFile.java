@@ -29,6 +29,10 @@ public class SourceFile {
     this(new File(filePath));
   }
 
+  public File getSourceFile() {
+    return sourceFile;
+  }
+
   public void generateClassFromFile() {
     try {
       fileClass = reader.getClassFromFile();
