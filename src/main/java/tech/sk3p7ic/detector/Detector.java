@@ -1,5 +1,6 @@
 package tech.sk3p7ic.detector;
 
+import tech.sk3p7ic.detector.detection.SourceFormatter;
 import tech.sk3p7ic.detector.files.FileIndexPair;
 import tech.sk3p7ic.detector.files.FileIndexType;
 import tech.sk3p7ic.detector.files.SourceFile;
@@ -40,8 +41,11 @@ public class Detector {
           throws IllegalArgumentException {
     if (pairs.length != 2)
       throw new IllegalArgumentException("Size of pairs does not equal 2: (" + pairs.length + ")..!");
-    List<FileIndexPair> pair1 = pairs[0];
-    List<FileIndexPair> pair2 = pairs[1];
+    SourceFormatter sourceFormatter = new SourceFormatter();
+    List<FileIndexPair> pair1 = pairs[0]; // Get the first pair
+    sourceFormatter.formatSourceInputList(pair1); // Remove comments and change variables to a more standard format
+    List<FileIndexPair> pair2 = pairs[1]; // Get the second pair
+    sourceFormatter.formatSourceInputList(pair2); // Remove comments and change variables to a more standard format
     // For each type, search the given pairs for all elements of that type and generate a similarity score.
     for (FileIndexType fileIndexType : FileIndexType.values()) {
       System.out.println(fileIndexType);

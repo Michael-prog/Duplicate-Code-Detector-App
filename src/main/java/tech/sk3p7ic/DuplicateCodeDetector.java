@@ -13,8 +13,9 @@ public class DuplicateCodeDetector {
   public static void main(String[] args) {
     //logger.info("Hello world!");
     //logger.error("Hello world!");
-    SourceFile sourceFile = new SourceFile("C:\\Users\\joshu\\IdeaProjects\\Duplicate-Code-Detector-App\\src\\main\\java\\tech\\sk3p7ic\\detector\\files\\FileReader.java");
+    //SourceFile sourceFile = new SourceFile("C:\\Users\\joshu\\IdeaProjects\\Duplicate-Code-Detector-App\\src\\main\\java\\tech\\sk3p7ic\\detector\\files\\FileReader.java");
     //SourceFile sourceFile = new SourceFile("C:\\Users\\joshu\\IdeaProjects\\Duplicate-Code-Detector-App\\src\\main\\java\\tech\\sk3p7ic\\DuplicateCodeDetector.java");
+    SourceFile sourceFile = new SourceFile("C:\\Users\\Josh\\IdeaProjects\\Duplicate-Code-Detector-App\\src\\main\\java\\tech\\sk3p7ic\\detector\\files\\FileReader.java");
     sourceFile.generateAll();
     List<FileIndexPair> fileIndexPairs = sourceFile.getFileIndexPairs();
     for (FileIndexPair pair : fileIndexPairs) {

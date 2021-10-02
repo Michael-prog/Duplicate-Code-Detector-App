@@ -2,6 +2,7 @@ package tech.sk3p7ic.detector.files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tech.sk3p7ic.detector.detection.SourceFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,6 +107,18 @@ public class SourceFile {
     generateLoopsFromMethod(new HashSet<>());
   }
 
+  public void testReplacements() {
+    SourceFormatter formatter = new SourceFormatter();
+    for (FileIndexPair pair : fileIndexPairs){
+      if (pair.fileIndexType == FileIndexType.TYPE_CLASS) continue;
+      formatter.formatSourceInput(pair);
+      for (Map.Entry<Integer, String> entry : pair.content.entrySet()) {
+        System.out.println(entry.getKey() + ":\t" + entry.getValue());
+      }
+      System.out.println("\n");
+    }
+  }
+
   /**
    * Generates all items, in order.
    */
@@ -113,6 +126,7 @@ public class SourceFile {
     generateClassFromFile();
     generateMethodsFromFile();
     generateLoopsFromMethod();
+    testReplacements();
   }
 
   /**
