@@ -36,7 +36,7 @@ public class SourceFormatter {
   public void formatSourceInput(FileIndexPair fileIndexPair) {
     Map<Integer, String> input = fileIndexPair.content;
     // Create variable to store variables used in the source code and their new values
-    Map<String, String> variableMap = new HashMap<>(); // <original_var, new_var_from_gerVarName>
+    Map<String, String> variableMap = new HashMap<>(); // <original_var, new_var_from_getVarName>
     for (int i = fileIndexPair.indexStart; i < fileIndexPair.indexEnd; i++) { // Iterate through the lines
       String line = removeInlineComments(input.get(i)); // Get the line that we will analyze without inline comments
       // Don't operate on the first line of a method
@@ -57,13 +57,22 @@ public class SourceFormatter {
     StringBuilder stringBuilder = new StringBuilder(findVarDefAndReplace(line, variableMap));
     for (Map.Entry<String, String> entry : variableMap.entrySet()) { // Check for previous variables in line
       String newLine = stringBuilder.toString();
-      stringBuilder.replace(0, stringBuilder.length(), newLine.replaceAll(entry.getKey(), entry.getValue()));
+      String regex = entry.getKey() + "[^\\w]";
+      Pattern pattern = Pattern.compile(regex);
+      Matcher matcher = pattern.matcher(newLine);
+      if (matcher.find()) {
+        String match = matcher.group(0); // Get the match from the pattern
+        // Use substring to get rid of non-alphanumeric character found by dblCheckRegex
+        stringBuilder.replace(0, stringBuilder.length(), newLine.replaceAll(match.substring(0, match.length() - 1),
+            entry.getValue()));
+      }
     }
     return stringBuilder.toString();
   }
 
   public String findVarDefAndReplace(String line, Map<String, String> variableMap) {
-    String regex = "([a-zA-Z]+ [a-zA-z0-9]+;)|([a-zA-Z]+ [a-zA-z0-9]+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
+    //String regex = "([a-zA-Z]+ [a-zA-z0-9]+;)|([a-zA-Z]+ [a-zA-z0-9]+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
+    String regex = "([a-zA-Z]+ \\w+;)|([a-zA-Z]+ \\w+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(line);
     boolean varInLine = matcher.find();
@@ -71,7 +80,16 @@ public class SourceFormatter {
     String currentVarName = matcher.group(0).strip().split(" ")[1]; // Get the name of the variable
     if (!variableMap.containsKey(currentVarName)) // If the current variable has already been defined
       variableMap.put(currentVarName, getVarName()); // Add the current variable name to the map
-    return line.replaceAll(currentVarName, variableMap.get(currentVarName));
+    String dblCheckRegex = currentVarName + "[^ \\w]"; // Used to double check that the chars we replace are correct
+    pattern = Pattern.compile(dblCheckRegex);
+    matcher = pattern.matcher(line);
+    if (matcher.find()) {
+      String checkedVar = matcher.group(0); // Get the variable that's being double-checked
+      // Use substring to get rid of non-alphanumeric character found by dblCheckRegex
+      return line.replaceAll(checkedVar.substring(0, checkedVar.length() - 1), variableMap.get(currentVarName));
+    } else {
+      return line.replaceFirst(currentVarName, variableMap.get(currentVarName));
+    }
   }
 
   public String removeInlineComments(String line) {
