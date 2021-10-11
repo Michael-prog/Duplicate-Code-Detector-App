@@ -52,4 +52,8 @@ public class SimilarityScoreManager {
       return null;
     }
   }
+
+  public List<SimilarityScore> getSimilarityScoreList() {
+    return similarityScoreList;
+  }
 }

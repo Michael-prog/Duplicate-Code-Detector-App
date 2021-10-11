@@ -59,6 +59,7 @@ public class Detector {
         }
       }
     }
+    scoreManager.getSimilarityScoreList();
     return new HashMap<>();
   }
 
@@ -75,7 +76,7 @@ public class Detector {
     int totalLines = larger.indexEnd - larger.indexStart;
     int numMatches = 0;
     for (int i = 0; i < smaller.content.size(); i++) {
-      if (smaller.content.get(i).equals(larger.content.get(i))) numMatches++;
+      if (smaller.content.get(smaller.indexStart + i).equals(larger.content.get(larger.indexStart + i))) numMatches++;
     }
     return (float) (numMatches / totalLines);
     //return 0; // TODO: Generate similarity scores.
