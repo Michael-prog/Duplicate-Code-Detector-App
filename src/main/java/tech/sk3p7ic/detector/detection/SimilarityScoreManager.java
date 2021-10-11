@@ -29,7 +29,7 @@ public class SimilarityScoreManager {
    * @param fileIndexPair1  The first set of file index information for the given score.
    * @param fileIndexPair2  The second set of file index information for the given score.
    */
-  public void addSimilarityScore(int similarityScore, File sourceFile1, File sourceFile2, FileIndexPair fileIndexPair1,
+  public void addSimilarityScore(float similarityScore, File sourceFile1, File sourceFile2, FileIndexPair fileIndexPair1,
                                  FileIndexPair fileIndexPair2) {
     // Add the score to the list
     similarityScoreList.add(new SimilarityScore(currentScoreID, similarityScore, sourceFile1, sourceFile2,

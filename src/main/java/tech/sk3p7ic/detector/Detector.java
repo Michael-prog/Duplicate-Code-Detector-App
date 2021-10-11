@@ -62,7 +62,22 @@ public class Detector {
     return new HashMap<>();
   }
 
-  private int getScore(FileIndexPair indexPair1, FileIndexPair indexPair2) {
-    return 0; // TODO: Generate similarity scores.
+  private float getScore(FileIndexPair indexPair1, FileIndexPair indexPair2) {
+    FileIndexPair larger, smaller; // Stores which file has more lines
+    // Find which pair has more / less lines and store as larger / smaller
+    if (indexPair1.content.size() > indexPair2.content.size()) {
+      larger = indexPair1;
+      smaller = indexPair2;
+    } else {
+      larger = indexPair2;
+      smaller = indexPair1;
+    }
+    int totalLines = larger.indexEnd - larger.indexStart;
+    int numMatches = 0;
+    for (int i = 0; i < smaller.content.size(); i++) {
+      if (smaller.content.get(i).equals(larger.content.get(i))) numMatches++;
+    }
+    return (float) (numMatches / totalLines);
+    //return 0; // TODO: Generate similarity scores.
   }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class SimilarityScore {
   public final int scoreId;
-  public final int similarityScore;
+  public final float similarityScore;
   public final File sourceFile1;
   public final File sourceFile2;
   public final FileIndexPair fileIndexPair1;
@@ -29,7 +29,7 @@ public class SimilarityScore {
    * @param fileIndexPair1  The first set of file index information for the given score.
    * @param fileIndexPair2  The second set of file index information for the given score.
    */
-  public SimilarityScore(int scoreId, int similarityScore, File sourceFile1, File sourceFile2,
+  public SimilarityScore(int scoreId, float similarityScore, File sourceFile1, File sourceFile2,
                          FileIndexPair fileIndexPair1, FileIndexPair fileIndexPair2) {
     this.scoreId = scoreId;
     this.similarityScore = similarityScore;
