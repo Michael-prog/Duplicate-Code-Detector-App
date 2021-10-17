@@ -7,6 +7,11 @@ Team:
 
 ---
 
+## Class Diagram
+
+Here's a semi-recent class diagram:  
+![Recent-ish Class Diagram](DCD_ClassDiagram.png "A semi-recent class diagram.")
+
 ## Tasks:
 
 ### Detector / Analyzer
