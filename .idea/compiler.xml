@@ -5,15 +5,25 @@
       <profile default="true" name="Default" enabled="true">
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile name="Annotation profile for Duplicate-Code-Detector-App" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <option name="project" value="tech.sk3p7ic.duplicateCodeDetector/Duplicate-Code-Detector-App" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/info/picocli/picocli-codegen/4.6.1/picocli-codegen-4.6.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/info/picocli/picocli/4.6.1/picocli-4.6.1.jar" />
+        </processorPath>
         <module name="Duplicate-Code-Detector-App" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Duplicate-Code-Detector-App" target="11" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Duplicate-Code-Detector-App" options="-Aproject=tech.sk3p7ic.duplicateCodeDetector/Duplicate-Code-Detector-App" />
+    </option>
   </component>
 </project>
