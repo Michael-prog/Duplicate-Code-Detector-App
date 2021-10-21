@@ -9,10 +9,7 @@ import tech.sk3p7ic.detector.detection.SimilarityScore;
 import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 import tech.sk3p7ic.detector.files.FileIndexPair;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class DuplicateCodeDetector {
   private static final Logger logger = LoggerFactory.getLogger(DuplicateCodeDetector.class);
@@ -23,9 +20,7 @@ public class DuplicateCodeDetector {
     System.out.println("Performing detection on '" + cliOptions.file1.getAbsolutePath() + "'");
     Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
     SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
-    for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
-      System.out.println("| " + score.scoreId + "\t| " + score.similarityScore + "\t|");
-    }
+    printData(scoreManager.getSimilarityScoreList());
     userMenu(scoreManager);
   }
 
@@ -68,11 +63,12 @@ public class DuplicateCodeDetector {
   public static void filterResults(String userInput, SimilarityScoreManager scoreManager) {
     try {
       String[] command = userInput.split(" ");
+      List<SimilarityScore> resultsList = new ArrayList<>();
       if (command[1].equals("gt")) {
         for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
-          if (score.similarityScore > Double.parseDouble(command[2]))
-            System.out.println("| " + score.scoreId + "\t| " + score.similarityScore + "\t|");
+          if (score.similarityScore > Double.parseDouble(command[2])) resultsList.add(score);
         }
+        printData(resultsList);
       } else {
         printHelp();
       }
@@ -89,5 +85,16 @@ public class DuplicateCodeDetector {
     System.out.println("dig <scoreId>                   : \"Dig\" into a similarity score to view");
     System.out.println("                                  similar blocks of code.");
     System.out.println("exit                            : Exit the program.");
+  }
+
+  public static void printData(List<SimilarityScore> scores) {
+    // TODO: Base filename column widths off of length of filename
+    System.out.printf("| %-5s | %-5s | %-15s | %-15s | %-20s | %-20s |%n", "ID", "Score", "File 1 Name", "File 2 Name",
+            "File 1 Index Type", "File 2 Index Type");
+    for (SimilarityScore score : scores) {
+      System.out.printf("| %-5d | %-5.2f | %-15s | %-15s | %-20s | %-20s |%n", score.scoreId, score.similarityScore,
+              score.sourceFile1.getName(), score.sourceFile2.getName(), score.fileIndexPair1.fileIndexType,
+              score.fileIndexPair2.fileIndexType);
+    }
   }
 }
