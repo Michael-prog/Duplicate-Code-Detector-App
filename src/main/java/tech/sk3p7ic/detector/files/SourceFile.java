@@ -116,10 +116,10 @@ public class SourceFile {
     for (FileIndexPair pair : fileIndexPairs){
       if (pair.fileIndexType == FileIndexType.TYPE_CLASS) continue;
       formatter.formatSourceInput(pair);
-      for (Map.Entry<Integer, String> entry : pair.content.entrySet()) {
-        System.out.println(entry.getKey() + ":\t" + entry.getValue());
-      }
-      System.out.println("\n");
+//      for (Map.Entry<Integer, String> entry : pair.content.entrySet()) {
+//        System.out.println(entry.getKey() + ":\t" + entry.getValue());
+//      }
+//      System.out.println("\n");
     }
   }
 

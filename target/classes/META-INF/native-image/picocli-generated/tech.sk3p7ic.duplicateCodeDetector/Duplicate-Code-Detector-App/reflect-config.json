@@ -1,0 +1,14 @@
+[
+  {
+    "name" : "tech.sk3p7ic.cli.CliOptions",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "createProject" },
+      { "name" : "file1" },
+      { "name" : "helpRequested" }
+    ]
+  }
+]
