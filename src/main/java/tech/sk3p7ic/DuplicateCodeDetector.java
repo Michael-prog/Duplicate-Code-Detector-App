@@ -7,8 +7,11 @@ import tech.sk3p7ic.cli.CliOptions;
 import tech.sk3p7ic.detector.Detector;
 import tech.sk3p7ic.detector.detection.SimilarityScore;
 import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
+import tech.sk3p7ic.detector.files.FileIndexPair;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
 
 public class DuplicateCodeDetector {
@@ -36,9 +39,24 @@ public class DuplicateCodeDetector {
       if (userInput.contains("help")) {
         printHelp();
       } else if (userInput.contains("dig")) {
-        System.out.println("Doing something"); // Eventually do something
+        String[] command = userInput.split(" ");
+        if (command.length == 2) {
+          try {
+            List<Map<Integer, String>> lines = scoreManager.getSimilarityScoreLines(Integer.parseInt(command[1]));
+            List<FileIndexPair> fileIndexPairs = scoreManager.getSimilarFileIndexPairs(Integer.parseInt(command[1]));
+            for (Map<Integer, String> list : lines) {
+              for (Map.Entry<Integer, String> entry : list.entrySet()) {
+                System.out.println(entry.getKey() + "\t:" + entry.getValue());
+              }
+            }
+          } catch (Exception e) {
+            logger.error(e.getMessage());
+          }
+        }
+      } else if (userInput.contains("filter")) {
+        System.out.println("Filtering results.");
       } else if (userInput.contains("quit") || userInput.contains("exit")) {
-        continue; // Used to prevent accidentally printing the help message when the user is trying to exit
+        System.out.println("Exiting...");
       } else {
         System.out.println("Invalid input: '" + userInput + "'");
         printHelp();

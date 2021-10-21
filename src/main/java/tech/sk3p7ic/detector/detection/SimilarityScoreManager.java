@@ -53,6 +53,13 @@ public class SimilarityScoreManager {
     }
   }
 
+  public List<FileIndexPair> getSimilarFileIndexPairs(int scoreID) {
+    List<FileIndexPair> indexPairList = new ArrayList<>();
+    indexPairList.add(similarityScoreList.get(scoreID).fileIndexPair1);
+    indexPairList.add(similarityScoreList.get(scoreID).fileIndexPair2);
+    return indexPairList;
+  }
+
   public List<SimilarityScore> getSimilarityScoreList() {
     return similarityScoreList;
   }
