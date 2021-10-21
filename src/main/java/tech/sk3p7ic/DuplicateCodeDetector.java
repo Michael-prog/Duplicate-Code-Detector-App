@@ -55,6 +55,7 @@ public class DuplicateCodeDetector {
         }
       } else if (userInput.contains("filter")) {
         System.out.println("Filtering results.");
+        filterResults(userInput, scoreManager);
       } else if (userInput.contains("quit") || userInput.contains("exit")) {
         System.out.println("Exiting...");
       } else {
@@ -64,9 +65,29 @@ public class DuplicateCodeDetector {
     } while (!(userInput.contains("quit") || userInput.contains("exit")));
   }
 
+  public static void filterResults(String userInput, SimilarityScoreManager scoreManager) {
+    try {
+      String[] command = userInput.split(" ");
+      if (command[1].equals("gt")) {
+        for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
+          if (score.similarityScore > Double.parseDouble(command[2]))
+            System.out.println("| " + score.scoreId + "\t| " + score.similarityScore + "\t|");
+        }
+      } else {
+        printHelp();
+      }
+    } catch (Exception e) {
+      logger.error(e.getMessage());
+    }
+  }
+
   public static void printHelp() {
     System.out.println("Duplicate Code Detector -- Help");
-    System.out.println("dig <scoreId> : \"Dig\" into a similarity score to view similar blocks of code.");
-    System.out.println("exit          : Exit the program.");
+    System.out.println("filter [gt,lt,ge,le,eq] <value> : Filter the output by a given value that is");
+    System.out.println("                                  either greater than, less than, greater equal,");
+    System.out.println("                                  less equal, or equal to the given value.");
+    System.out.println("dig <scoreId>                   : \"Dig\" into a similarity score to view");
+    System.out.println("                                  similar blocks of code.");
+    System.out.println("exit                            : Exit the program.");
   }
 }
