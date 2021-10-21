@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SourceFormatter {
-  char varLetter; // Used to replace variable names
-  short varNumber; // Placed after varLetter to extend number of supported variables
+  private char varLetter; // Used to replace variable names
+  private short varNumber; // Placed after varLetter to extend number of supported variables
 
   public SourceFormatter() {
     varLetter = 'A';
