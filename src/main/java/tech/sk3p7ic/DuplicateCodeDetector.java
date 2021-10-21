@@ -7,7 +7,6 @@ import tech.sk3p7ic.cli.CliOptions;
 import tech.sk3p7ic.detector.Detector;
 import tech.sk3p7ic.detector.detection.SimilarityScore;
 import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
-import tech.sk3p7ic.detector.files.FileIndexPair;
 
 import java.util.*;
 
@@ -38,21 +37,29 @@ public class DuplicateCodeDetector {
         if (command.length == 2) {
           try {
             List<Map<Integer, String>> lines = scoreManager.getSimilarityScoreLines(Integer.parseInt(command[1]));
-            List<FileIndexPair> fileIndexPairs = scoreManager.getSimilarFileIndexPairs(Integer.parseInt(command[1]));
-            for (Map<Integer, String> list : lines) {
+            for (int i = 0; i < lines.size(); i++) {
+              Map<Integer, String> list = lines.get(i);
+              SimilarityScore score = scoreManager.getSimilarityScoreList().get(Integer.parseInt(command[1]));
+              System.out.println(((i == 0) ? score.sourceFile1.getName() : score.sourceFile2.getName()));
               for (Map.Entry<Integer, String> entry : list.entrySet()) {
                 System.out.println(entry.getKey() + "\t:" + entry.getValue());
               }
             }
           } catch (Exception e) {
             logger.error(e.getMessage());
+            printHelp();
           }
+        } else {
+          System.out.println("Invalid arguments.\n");
+          printHelp();
         }
       } else if (userInput.contains("filter")) {
         System.out.println("Filtering results.");
         filterResults(userInput, scoreManager);
       } else if (userInput.contains("quit") || userInput.contains("exit")) {
         System.out.println("Exiting...");
+      } else if (userInput.equals("")) {
+        continue; // Used to do nothing if the user does not want to do anything
       } else {
         System.out.println("Invalid input: '" + userInput + "'");
         printHelp();
