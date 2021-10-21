@@ -6,8 +6,8 @@ import picocli.CommandLine;
 import tech.sk3p7ic.cli.CliOptions;
 import tech.sk3p7ic.detector.Detector;
 import tech.sk3p7ic.detector.detection.SimilarityScore;
+import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -19,14 +19,14 @@ public class DuplicateCodeDetector {
     new CommandLine(cliOptions).parseArgs(args);
     System.out.println("Performing detection on '" + cliOptions.file1.getAbsolutePath() + "'");
     Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
-    List<SimilarityScore> scores = mainDetector.generateSimilarityScores(); // Get the scores
-    for (SimilarityScore score : scores) {
+    SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
+    for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
       System.out.println("| " + score.scoreId + "\t| " + score.similarityScore + "\t|");
     }
-    userMenu(scores);
+    userMenu(scoreManager);
   }
 
-  public static void userMenu(List<SimilarityScore> similarityScores) {
+  public static void userMenu(SimilarityScoreManager scoreManager) {
     Scanner scanner = new Scanner(System.in); // Scanner to get user input
     String userInput;
     do {

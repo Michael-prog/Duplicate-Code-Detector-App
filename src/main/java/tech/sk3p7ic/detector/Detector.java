@@ -27,7 +27,7 @@ public class Detector {
     this(new SourceFile(file1), new SourceFile(file2));
   }
 
-  public List<SimilarityScore> generateSimilarityScores()
+  public SimilarityScoreManager generateSimilarityScores()
           throws IllegalArgumentException {
     SourceFormatter sourceFormatter = new SourceFormatter();
     file1.generateAll(); // Generate all pairs for first file
@@ -47,7 +47,7 @@ public class Detector {
         }
       }
     }
-    return scoreManager.getSimilarityScoreList();
+    return scoreManager;
   }
 
   private float getScore(FileIndexPair indexPair1, FileIndexPair indexPair2) {
