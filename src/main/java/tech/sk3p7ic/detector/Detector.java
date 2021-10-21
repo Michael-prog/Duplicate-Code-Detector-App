@@ -63,7 +63,23 @@ public class Detector {
     int totalLines = larger.indexEnd - larger.indexStart;
     int numMatches = 0;
     for (int i = 0; i < smaller.content.size(); i++) {
-      if (smaller.content.get(smaller.indexStart + i).equals(larger.content.get(larger.indexStart + i))) numMatches++;
+      //if (smaller.content.get(smaller.indexStart + i).equals(larger.content.get(larger.indexStart + i))) numMatches++;
+      String[] smallerPairLine = smaller.content.get(smaller.indexStart + i).split(" ");
+      String[] largerPairLine = larger.content.get(larger.indexStart + i).split(" ");
+      int lineScore = 0;
+      if (smallerPairLine.length > largerPairLine.length) {
+        for (int j = 0; j < largerPairLine.length; j++) {
+          if (smallerPairLine[j].equals(largerPairLine[j])) lineScore++;
+        }
+        if (lineScore != 0)
+          if ((float) (largerPairLine.length / lineScore) > 0.75f) numMatches++;
+      } else {
+        for (int j = 0; j < smallerPairLine.length; j++) {
+          if (smallerPairLine[j].equals(largerPairLine[j])) lineScore++;
+        }
+        if (lineScore != 0)
+          if ((float) (smallerPairLine.length / lineScore) > 0.75f) numMatches++;
+      }
     }
     return (float) (numMatches / totalLines);
     //return 0; // TODO: Generate similarity scores.
