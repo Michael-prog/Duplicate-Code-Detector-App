@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class SimilarityScoreManager {
-  private static Logger logger = LoggerFactory.getLogger(SimilarityScoreManager.class);
-  private List<SimilarityScore> similarityScoreList; // Stores the similarity scores
+  private final static Logger logger = LoggerFactory.getLogger(SimilarityScoreManager.class);
+  private final List<SimilarityScore> similarityScoreList; // Stores the similarity scores
   private static int currentScoreID = -1; // Stores the current score ID
 
   public SimilarityScoreManager() {
