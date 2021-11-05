@@ -60,28 +60,31 @@ public class Detector {
       larger = indexPair2;
       smaller = indexPair1;
     }
-    int totalLines = larger.indexEnd - larger.indexStart;
+    //int totalLines = larger.indexEnd - larger.indexStart;
+    //int totalLines = (larger.indexEnd - larger.indexStart) - 1;
+    int totalLines = larger.content.size();
     int numMatches = 0;
     for (int i = 0; i < smaller.content.size(); i++) {
       //if (smaller.content.get(smaller.indexStart + i).equals(larger.content.get(larger.indexStart + i))) numMatches++;
       String[] smallerPairLine = smaller.content.get(smaller.indexStart + i).split(" ");
       String[] largerPairLine = larger.content.get(larger.indexStart + i).split(" ");
       int lineScore = 0;
+      // Sanity check for if both lines are empty
+      if (smallerPairLine.length == 0 && largerPairLine.length == 0) numMatches++;
       if (smallerPairLine.length > largerPairLine.length) {
         for (int j = 0; j < largerPairLine.length; j++) {
           if (smallerPairLine[j].equals(largerPairLine[j])) lineScore++;
         }
         if (lineScore != 0)
-          if ((float) (largerPairLine.length / lineScore) > 0.75f) numMatches++;
+          if ((float) (largerPairLine.length / lineScore) >= 0.75f) numMatches++;
       } else {
         for (int j = 0; j < smallerPairLine.length; j++) {
           if (smallerPairLine[j].equals(largerPairLine[j])) lineScore++;
         }
         if (lineScore != 0)
-          if ((float) (smallerPairLine.length / lineScore) > 0.75f) numMatches++;
+          if ((float) (smallerPairLine.length / lineScore) >= 0.75f) numMatches++;
       }
     }
-    return (float) (numMatches / totalLines);
-    //return 0; // TODO: Generate similarity scores.
+    return (totalLines == 0) ? 0.0f : ((float) numMatches / (float) totalLines);
   }
 }
