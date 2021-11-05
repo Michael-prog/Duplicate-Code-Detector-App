@@ -40,7 +40,9 @@ public class DuplicateCodeDetector {
             for (int i = 0; i < lines.size(); i++) {
               Map<Integer, String> list = lines.get(i);
               SimilarityScore score = scoreManager.getSimilarityScoreList().get(Integer.parseInt(command[1]));
-              System.out.println(((i == 0) ? score.sourceFile1.getName() : score.sourceFile2.getName()));
+              System.out.print(((i == 0) ? score.sourceFile1.getName() : score.sourceFile2.getName()));
+              System.out.println(((i == 0) ? "\t" + score.fileIndexPair1.fileIndexType.toString() :
+                      "\t" + score.fileIndexPair2.fileIndexType.toString()));
               for (Map.Entry<Integer, String> entry : list.entrySet()) {
                 System.out.println(entry.getKey() + "\t:" + entry.getValue());
               }
@@ -59,7 +61,7 @@ public class DuplicateCodeDetector {
       } else if (userInput.contains("quit") || userInput.contains("exit")) {
         System.out.println("Exiting...");
       } else if (userInput.equals("")) {
-        continue; // Used to do nothing if the user does not want to do anything
+        System.out.print(""); // Used to do nothing if the user does not want to do anything
       } else {
         System.out.println("Invalid input: '" + userInput + "'");
         printHelp();
@@ -71,14 +73,32 @@ public class DuplicateCodeDetector {
     try {
       String[] command = userInput.split(" ");
       List<SimilarityScore> resultsList = new ArrayList<>();
-      if (command[1].equals("gt")) {
-        for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
-          if (score.similarityScore > Double.parseDouble(command[2])) resultsList.add(score);
+      boolean breakLoop = false; // Used to break the loop on invalid input
+      for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
+        switch (command[1]) {
+          case "gt":
+            if (score.similarityScore > Double.parseDouble(command[2])) resultsList.add(score);
+            break;
+          case "lt":
+            if (score.similarityScore < Double.parseDouble(command[2])) resultsList.add(score);
+            break;
+          case "ge":
+            if (score.similarityScore >= Double.parseDouble(command[2])) resultsList.add(score);
+            break;
+          case "le":
+            if (score.similarityScore <= Double.parseDouble(command[2])) resultsList.add(score);
+            break;
+          case "eq":
+            if (score.similarityScore == Double.parseDouble(command[2])) resultsList.add(score);
+            break;
+          default:
+            printHelp();
+            breakLoop = true;
+            break;
         }
-        printData(resultsList);
-      } else {
-        printHelp();
+        if (breakLoop) break; // Break the loop if the help was printed
       }
+      if (!breakLoop) printData(resultsList); // Print the data only if there were no errors
     } catch (Exception e) {
       logger.error(e.getMessage());
     }
@@ -98,6 +118,8 @@ public class DuplicateCodeDetector {
     // TODO: Base filename column widths off of length of filename
     System.out.printf("| %-5s | %-5s | %-15s | %-15s | %-20s | %-20s |%n", "ID", "Score", "File 1 Name", "File 2 Name",
             "File 1 Index Type", "File 2 Index Type");
+    System.out.println("+-------+-------+-----------------+-----------------+----------------------" +
+                       "+----------------------+");
     for (SimilarityScore score : scores) {
       System.out.printf("| %-5d | %-5.2f | %-15s | %-15s | %-20s | %-20s |%n", score.scoreId, score.similarityScore,
               score.sourceFile1.getName(), score.sourceFile2.getName(), score.fileIndexPair1.fileIndexType,
