@@ -72,33 +72,11 @@ public class DuplicateCodeDetector {
   public static void filterResults(String userInput, SimilarityScoreManager scoreManager) {
     try {
       String[] command = userInput.split(" ");
-      List<SimilarityScore> resultsList = new ArrayList<>();
-      boolean breakLoop = false; // Used to break the loop on invalid input
-      for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
-        switch (command[1]) {
-          case "gt":
-            if (score.similarityScore > Double.parseDouble(command[2])) resultsList.add(score);
-            break;
-          case "lt":
-            if (score.similarityScore < Double.parseDouble(command[2])) resultsList.add(score);
-            break;
-          case "ge":
-            if (score.similarityScore >= Double.parseDouble(command[2])) resultsList.add(score);
-            break;
-          case "le":
-            if (score.similarityScore <= Double.parseDouble(command[2])) resultsList.add(score);
-            break;
-          case "eq":
-            if (score.similarityScore == Double.parseDouble(command[2])) resultsList.add(score);
-            break;
-          default:
-            printHelp();
-            breakLoop = true;
-            break;
-        }
-        if (breakLoop) break; // Break the loop if the help was printed
-      }
-      if (!breakLoop) printData(resultsList); // Print the data only if there were no errors
+      List<SimilarityScore> resultsList = scoreManager.filterScores(command[1], Double.parseDouble(command[2]));
+      if (!(resultsList == null))
+        printData(resultsList);
+      else
+        printHelp();
     } catch (Exception e) {
       logger.error(e.getMessage());
     }

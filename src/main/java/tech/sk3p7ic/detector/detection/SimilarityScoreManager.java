@@ -63,4 +63,30 @@ public class SimilarityScoreManager {
   public List<SimilarityScore> getSimilarityScoreList() {
     return similarityScoreList;
   }
+
+  public List<SimilarityScore> filterScores(String filter, double filterValue) {
+    List<SimilarityScore> resultsList = new ArrayList<>();
+    for (SimilarityScore score : similarityScoreList) {
+      switch(filter) {
+        case "gt":
+          if (score.similarityScore > filterValue) resultsList.add(score);
+          break;
+        case "lt":
+          if (score.similarityScore < filterValue) resultsList.add(score);
+          break;
+        case "ge":
+          if (score.similarityScore >= filterValue) resultsList.add(score);
+          break;
+        case "le":
+          if (score.similarityScore <= filterValue) resultsList.add(score);
+          break;
+        case "eq":
+          if (score.similarityScore == filterValue) resultsList.add(score);
+          break;
+        default:
+          return null; // Return null if there was an incorrect filter supplied
+      }
+    }
+    return resultsList; // Return the filtered list of scores
+  }
 }
