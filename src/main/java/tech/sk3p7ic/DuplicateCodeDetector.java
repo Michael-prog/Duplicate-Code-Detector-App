@@ -7,6 +7,7 @@ import tech.sk3p7ic.cli.CliOptions;
 import tech.sk3p7ic.detector.Detector;
 import tech.sk3p7ic.detector.detection.SimilarityScore;
 import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
+import tech.sk3p7ic.gui.GraphicsLoader;
 
 import java.util.*;
 
@@ -16,11 +17,25 @@ public class DuplicateCodeDetector {
   public static void main(String[] args) {
     CliOptions cliOptions = new CliOptions();
     new CommandLine(cliOptions).parseArgs(args);
-    System.out.println("Performing detection on '" + cliOptions.file1.getAbsolutePath() + "'");
-    Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
-    SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
-    printData(scoreManager.getSimilarityScoreList());
-    userMenu(scoreManager);
+    if (cliOptions.useGUI) {
+      GraphicsLoader graphicsLoader = new GraphicsLoader();
+    } else { // Start the terminal app
+      // Check that file inputs have been given
+      if (cliOptions.file1 == null) {
+        if (cliOptions.file2 != null) // If this was not null for some reason
+          cliOptions.file1 = cliOptions.file2; // Set the first file to be the second file
+        else // If both are null
+          System.out.println("Getting the files..."); // TODO: Actually get the filenames
+      } else {
+        if (cliOptions.file2 == null) // If there was no second file specified
+          cliOptions.file2 = cliOptions.file1; // Set the second file to equal the second.
+      }
+      System.out.println("Performing detection on '" + cliOptions.file1.getAbsolutePath() + "'");
+      Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
+      SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
+      printData(scoreManager.getSimilarityScoreList());
+      userMenu(scoreManager);
+    }
   }
 
   public static void userMenu(SimilarityScoreManager scoreManager) {
