@@ -13,26 +13,42 @@ public class SourceFormatter {
   private char varLetter; // Used to replace variable names
   private short varNumber; // Placed after varLetter to extend number of supported variables
 
+  /**
+   * Reformats a given source file to make it easier to generate scores from.
+   */
   public SourceFormatter() {
     varLetter = 'A';
     varNumber = 0;
   }
 
+  /**
+   * Converts a given variable name into a new variable name that will be easier to do string comparisons with.
+   *
+   * @return The new variable name for a given variable.
+   */
   private String getVarName() {
-    if (varLetter > 'Z') {
+    if (varLetter > 'Z') { // Check if we need to reset the varLetter
       varLetter = 'A';
       varNumber++;
     }
-    String varName = "__" + varLetter + varNumber + "__";
+    String varName = "__" + varLetter + varNumber + "__"; // Make a string like "__A0__"
     varLetter++;
     return varName;
   }
 
+  /**
+   * Resets the values for the varLetter and varNumber.
+   */
   private void resetVarLetter() {
     varLetter = 'A';
     varNumber = 0;
   }
 
+  /**
+   * Reformats code stored in a FileIndexPair.
+   *
+   * @param fileIndexPair The FileIndexPair containing the code that will be reformatted in-place.
+   */
   public void formatSourceInput(FileIndexPair fileIndexPair) {
     Map<Integer, String> input = fileIndexPair.content;
     // Create variable to store variables used in the source code and their new values
@@ -43,9 +59,14 @@ public class SourceFormatter {
       if (i == fileIndexPair.indexStart && fileIndexPair.fileIndexType == FileIndexType.TYPE_METHOD) continue;
       input.replace(i, findVarAndReplace(line, variableMap)); // Replace the old line with the new one
     }
-    resetVarLetter();
+    resetVarLetter(); // Reset when we're done for the next block that we reformat
   }
 
+  /**
+   * Reformats a given list of FileIndexPair objects.
+   *
+   * @param input List containing the FileIndexPair objects that will be reformatted.
+   */
   public void formatSourceInputList(List<FileIndexPair> input) {
     for (int i = 0; i < input.size(); i++) {
       formatSourceInput(input.get(i));
@@ -53,13 +74,25 @@ public class SourceFormatter {
     }
   }
 
+  /**
+   * Finds a variable in a line and replaces it with a new variable.
+   *
+   * @param line        The line to be evaluated.
+   * @param variableMap A map containing the old variable names from the source file and the new variable names that
+   *                    have been assigned.
+   *
+   * @return The line, reformatted with the variable name replacements.
+   */
   public String findVarAndReplace(String line, Map<String, String> variableMap) {
+    // Check if there's a variable definition in a line and get that line
     StringBuilder stringBuilder = new StringBuilder(findVarDefAndReplace(line, variableMap));
     for (Map.Entry<String, String> entry : variableMap.entrySet()) { // Check for previous variables in line
-      String newLine = stringBuilder.toString();
-      String regex = entry.getKey() + "[^\\w]";
+      String newLine = stringBuilder.toString(); // The new line, after replacing variable definitions
+      String regex = entry.getKey() + "[^\\w]"; // The regex used to detect if there's a variable in a line
+      // Compile and match the regex
       Pattern pattern = Pattern.compile(regex);
       Matcher matcher = pattern.matcher(newLine);
+      // If there's a match
       if (matcher.find()) {
         String match = matcher.group(0); // Get the match from the pattern
         // Use substring to get rid of non-alphanumeric character found by dblCheckRegex
@@ -67,11 +100,20 @@ public class SourceFormatter {
             entry.getValue()));
       }
     }
-    return stringBuilder.toString();
+    return stringBuilder.toString(); // Return the new line
   }
 
+  /**
+   * Finds a variable definition in a line and replaces it with a new variable.
+   *
+   * @param line        The line to be evaluated.
+   * @param variableMap A Map containing the old variable names from the source file and the new variable names that
+   *                    have been assigned. If a variable definition is found, that variable and its new variable name
+   *                    will be added to this Map.
+   *
+   * @return The line, with any variable name changes applied.
+   */
   public String findVarDefAndReplace(String line, Map<String, String> variableMap) {
-    //String regex = "([a-zA-Z]+ [a-zA-z0-9]+;)|([a-zA-Z]+ [a-zA-z0-9]+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
     String regex = "([a-zA-Z]+ \\w+;)|([a-zA-Z]+ \\w+.*=)|(> [a-zA-Z]+)"; // Used to detect parenthesis
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(line);
@@ -92,6 +134,13 @@ public class SourceFormatter {
     }
   }
 
+  /**
+   * Removes inline comments from a given line to make string comparisons easier.
+   *
+   * @param line The line to remove comments from.
+   *
+   * @return The line, with inline comments removed.
+   */
   public String removeInlineComments(String line) {
     // TODO: Allow for "//" in strings to not be counted as a comment
     String commentRegex = "//.*$";

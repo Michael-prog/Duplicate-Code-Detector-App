@@ -12,12 +12,15 @@ import java.util.Map;
 
 public class SimilarityScoreManager {
   private final static Logger logger = LoggerFactory.getLogger(SimilarityScoreManager.class);
-  private final List<SimilarityScore> similarityScoreList; // Stores the similarity scores
   private static int currentScoreID = -1; // Stores the current score ID
+  private final List<SimilarityScore> similarityScoreList; // Stores the similarity scores
 
+  /**
+   * Manages a list of similarity scores and their ids.
+   */
   public SimilarityScoreManager() {
     similarityScoreList = new ArrayList<>();
-    currentScoreID++;
+    currentScoreID++; // Make the current score 0
   }
 
   /**
@@ -41,6 +44,7 @@ public class SimilarityScoreManager {
    * Gets the lines of code that the similarity score with the given ID is for.
    *
    * @param scoreId The ID of the similarity score to check
+   *
    * @return The lines of code that the similarity score is for. Returns null if the lines could not be displayed due to
    * an error reading the source file.
    */
@@ -53,6 +57,13 @@ public class SimilarityScoreManager {
     }
   }
 
+  /**
+   * Gets the FileIndexPairs for a given score ID.
+   *
+   * @param scoreID The ID of the score to retrieve the FileIndexPair objects from.
+   *
+   * @return A List of FileIndexPair objects. This list should be of length 2.
+   */
   public List<FileIndexPair> getSimilarFileIndexPairs(int scoreID) {
     List<FileIndexPair> indexPairList = new ArrayList<>();
     indexPairList.add(similarityScoreList.get(scoreID).fileIndexPair1);
@@ -60,14 +71,30 @@ public class SimilarityScoreManager {
     return indexPairList;
   }
 
+  /**
+   * Returns the contents of the similarityScoreList.
+   *
+   * @return The List, similarityScoreList.
+   */
   public List<SimilarityScore> getSimilarityScoreList() {
     return similarityScoreList;
   }
 
+  /**
+   * Filters scores based off of a given filter code and a value.
+   *
+   * @param filter      A String containing "gt" (greater than), "lt" (less than), "ge" (greater equals), "le" (less
+   *                    equals), "eq" (equals).
+   * @param filterValue The value to filter the results with.
+   *
+   * @return A list of SimilarityScores matching the given filter, unless a bad filter was given in which case null will
+   * be returned.
+   */
   public List<SimilarityScore> filterScores(String filter, double filterValue) {
-    List<SimilarityScore> resultsList = new ArrayList<>();
+    List<SimilarityScore> resultsList = new ArrayList<>(); // Stores the scores matching the filter
+    // Check if each score matches the given filter
     for (SimilarityScore score : similarityScoreList) {
-      switch(filter) {
+      switch (filter) {
         case "gt":
           if (score.similarityScore > filterValue) resultsList.add(score);
           break;

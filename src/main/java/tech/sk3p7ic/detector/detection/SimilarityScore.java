@@ -43,6 +43,7 @@ public class SimilarityScore {
    * Gets the lines of code that the similarity score is for.
    *
    * @return The lines of code that the similarity score is for.
+   *
    * @throws IOException If the source file cannot be read.
    */
   public List<Map<Integer, String>> showSimilarLines() throws IOException {
