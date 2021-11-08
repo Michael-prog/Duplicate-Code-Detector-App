@@ -49,22 +49,23 @@ public class DuplicateCodeDetector {
   private static File[] getFilenames() {
     Scanner scanner = new Scanner(System.in); // Scanner to get user input
     int numFilesChoice = 0;
-    boolean isValidChoice = false;
-    while (!isValidChoice) {
+    while (!(numFilesChoice == 1 || numFilesChoice == 2)) {
       System.out.print("Enter number of files to scan (1 or 2): ");
-      if (scanner.hasNextInt()) {
-        numFilesChoice = scanner.nextInt();
-        if (numFilesChoice == 1 || numFilesChoice == 2)
-          isValidChoice = true;
-        else
-          System.out.println("[!] Invalid choice! Please enter either '1' or '2'.");
-      } else {
-        System.out.println("[!] Invalid choice! Please enter either '1' or '2'.");
+      // Attempt to get the number from the user
+      try {
+        String userInput = scanner.nextLine(); // First get a string of the text that the user enters
+        numFilesChoice = Integer.parseInt(userInput.strip()); // Attempt to parse the user input into an int
+        // Check if the user did not enter 1 or 2
+        if (!(numFilesChoice == 1 || numFilesChoice == 2)) {
+          System.out.println("[!] Please enter a valid number (1 or 2).");
+        }
+      } catch (NumberFormatException e) { // if there was an error parsing the integer
+        System.out.println("[!] Please enter a valid number (1 or 2).");
       }
     }
     // Get the files
     File[] files = new File[2]; // There will always be two files stored in this array
-    isValidChoice = false;
+    boolean isValidChoice = false;
     while (!isValidChoice) {
       // There will always be at least one file, so get that file
       // The ternary operator is used to print "first" if the user is trying to scan 2 different files
