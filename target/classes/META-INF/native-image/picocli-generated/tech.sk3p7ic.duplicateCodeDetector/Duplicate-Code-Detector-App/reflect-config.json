@@ -8,7 +8,9 @@
     "fields" : [
       { "name" : "createProject" },
       { "name" : "file1" },
-      { "name" : "helpRequested" }
+      { "name" : "file2" },
+      { "name" : "helpRequested" },
+      { "name" : "useGUI" }
     ]
   }
 ]
