@@ -19,7 +19,7 @@ public class DuplicateCodeDetector {
     CliOptions cliOptions = new CliOptions();
     new CommandLine(cliOptions).parseArgs(args);
     if (cliOptions.useGUI) {
-      GraphicsLoader graphicsLoader = new GraphicsLoader();
+      GraphicsLoader.start(); // Start the GUI
     } else { // Start the terminal app
       // Check that file inputs have been given
       if (cliOptions.file1 == null) {
