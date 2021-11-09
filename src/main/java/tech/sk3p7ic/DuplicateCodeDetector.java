@@ -10,16 +10,24 @@ import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 import tech.sk3p7ic.gui.GraphicsLoader;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
 
 public class DuplicateCodeDetector {
   private static final Logger logger = LoggerFactory.getLogger(DuplicateCodeDetector.class);
 
+  /**
+   * Starts the Duplicate Code Detector App.
+   * @param args Command-line arguments that will be parsed. See documentation for a list of arguments.
+   */
   public static void main(String[] args) {
+    // Parse the command line arguments
     CliOptions cliOptions = new CliOptions();
     new CommandLine(cliOptions).parseArgs(args);
-    if (cliOptions.useGUI) {
-      GraphicsLoader.start(); // Start the GUI
+    if (cliOptions.useGUI) { // Start the GUI
+      GraphicsLoader.start();
     } else { // Start the terminal app
       // Check that file inputs have been given
       if (cliOptions.file1 == null) {
@@ -35,6 +43,7 @@ public class DuplicateCodeDetector {
           cliOptions.file2 = cliOptions.file1; // Set the second file to equal the second.
       }
       System.out.println("Performing detection on '" + cliOptions.file1.getAbsolutePath() + "'");
+      // Start the detection and get the scores
       Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
       SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
       printData(scoreManager.getSimilarityScoreList());
@@ -122,19 +131,25 @@ public class DuplicateCodeDetector {
     return files;
   }
 
+  /**
+   * Runs a menu that the user can interact with to further investigate duplicate blocks of code.
+   * @param scoreManager The SimilarityScoreManager object that's storing the similarity scores that were generated on
+   *                     the blocks of code from the input source file(s).
+   */
   public static void userMenu(SimilarityScoreManager scoreManager) {
     Scanner scanner = new Scanner(System.in); // Scanner to get user input
-    String userInput;
+    String userInput; // Stores the input from the user
     do {
-      System.out.print("$ DCD >> ");
-      userInput = scanner.nextLine();
+      System.out.print("$ DCD >> "); // The prompt
+      userInput = scanner.nextLine(); // Get what the user enters
       userInput = userInput.toLowerCase(Locale.ROOT); // Force characters into lowercase for easier comparison
-      if (userInput.contains("help")) {
+      if (userInput.contains("help")) { // Help -- Show the commands
         printHelp();
-      } else if (userInput.contains("dig")) {
+      } else if (userInput.contains("dig")) { // Dig -- Look at the code for similar blocks of code
         String[] command = userInput.split(" ");
         if (command.length == 2) {
           try {
+            // Get the lines from the source file(s) and display
             List<Map<Integer, String>> lines = scoreManager.getSimilarityScoreLines(Integer.parseInt(command[1]));
             for (int i = 0; i < lines.size(); i++) {
               Map<Integer, String> list = lines.get(i);
@@ -154,10 +169,10 @@ public class DuplicateCodeDetector {
           System.out.println("Invalid arguments.\n");
           printHelp();
         }
-      } else if (userInput.contains("filter")) {
+      } else if (userInput.contains("filter")) { // Filter -- Filter results with a given filter and value
         System.out.println("Filtering results.");
         filterResults(userInput, scoreManager);
-      } else if (userInput.contains("quit") || userInput.contains("exit")) {
+      } else if (userInput.contains("quit") || userInput.contains("exit")) { // Exit the program
         System.out.println("Exiting...");
       } else if (userInput.equals("")) {
         System.out.print(""); // Used to do nothing if the user does not want to do anything
@@ -168,19 +183,29 @@ public class DuplicateCodeDetector {
     } while (!(userInput.contains("quit") || userInput.contains("exit")));
   }
 
+  /**
+   * Filters results with a given input and SimilarityScoreManager.
+   * @param userInput The input string that the user entered. In a perfect case, will be of the form "filter gt 0.69",
+   *                  for example.
+   * @param scoreManager SimilarityScoreManager containing the similarity scores and their IDs.
+   */
   public static void filterResults(String userInput, SimilarityScoreManager scoreManager) {
     try {
+      // Split the command and attempt to get the results of the filter
       String[] command = userInput.split(" ");
       List<SimilarityScore> resultsList = scoreManager.filterScores(command[1], Double.parseDouble(command[2]));
-      if (!(resultsList == null))
+      if (!(resultsList == null)) // Print the results
         printData(resultsList);
-      else
+      else // If the user gave an invalid filter
         printHelp();
     } catch (Exception e) {
       logger.error(e.getMessage());
     }
   }
 
+  /**
+   * Prints the help prompt containing the commands that the user may enter into the menu.
+   */
   public static void printHelp() {
     System.out.println("Duplicate Code Detector -- Help");
     System.out.println("filter [gt,lt,ge,le,eq] <value> : Filter the output by a given value that is");
@@ -191,12 +216,18 @@ public class DuplicateCodeDetector {
     System.out.println("exit                            : Exit the program.");
   }
 
+  /**
+   * Prints the input data in a nice table format.
+   * @param scores List of SimilarityScore objects containing the information that will be printed.
+   */
   public static void printData(List<SimilarityScore> scores) {
     // TODO: Base filename column widths off of length of filename
+    // Print the column headers
     System.out.printf("| %-5s | %-5s | %-15s | %-15s | %-20s | %-20s |%n", "ID", "Score", "File 1 Name", "File 2 Name",
             "File 1 Index Type", "File 2 Index Type");
     System.out.println("+-------+-------+-----------------+-----------------+----------------------" +
                        "+----------------------+");
+    // Print the scores and their other information
     for (SimilarityScore score : scores) {
       System.out.printf("| %-5d | %-5.2f | %-15s | %-15s | %-20s | %-20s |%n", score.scoreId, score.similarityScore,
               score.sourceFile1.getName(), score.sourceFile2.getName(), score.fileIndexPair1.fileIndexType,
