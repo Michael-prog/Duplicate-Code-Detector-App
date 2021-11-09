@@ -5,5 +5,6 @@ public enum FileIndexType {
   TYPE_METHOD,
   TYPE_FOR_LOOP,
   TYPE_WHILE_LOOP,
-  TYPE_SWITCH
+  TYPE_SWITCH,
+  TYPE_DO_WHILE_LOOP
 }
