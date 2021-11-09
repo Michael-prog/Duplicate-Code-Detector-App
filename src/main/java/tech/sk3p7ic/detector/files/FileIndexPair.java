@@ -8,6 +8,14 @@ public class FileIndexPair {
   public final int indexEnd;
   public final Map<Integer, String> content;
 
+  /**
+   * Stores information about a given block of code.
+   *
+   * @param fileIndexType The FileIndexType for the block of code being stored.
+   * @param indexStart    The starting index in the source file for this block of code.
+   * @param indexEnd      The ending index in the source file for this block of code.
+   * @param content       The code from the source file this FileIndexPair is for.
+   */
   public FileIndexPair(FileIndexType fileIndexType, int indexStart, int indexEnd, Map<Integer, String> content) {
     this.fileIndexType = fileIndexType;
     this.indexStart = indexStart;

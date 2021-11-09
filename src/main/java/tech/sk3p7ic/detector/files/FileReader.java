@@ -26,6 +26,7 @@ public class FileReader {
    * Get the main class from the provided file.
    *
    * @return A map containing the indexes of each line in the class and their contents on each line.
+   *
    * @throws IOException If the input source file cannot be read.
    */
   public Map<Integer, String> getClassFromFile() throws IOException {
@@ -65,6 +66,7 @@ public class FileReader {
    * Gets the methods contained within a given class.
    *
    * @param classLines A map of line indexes and line strings that will be searched for methods.
+   *
    * @return A List of Maps of line indexes and their respective lines for each detected method.
    */
   public List<Map<Integer, String>> getMethodsFromFile(Map<Integer, String> classLines) {
@@ -72,7 +74,7 @@ public class FileReader {
     for (Map.Entry<Integer, String> lineEntry : classLines.entrySet()) {
       String line = lineEntry.getValue();
       if ((line.contains("public") || line.contains("private") || line.contains("protected")) &&
-              line.contains("(") && !line.contains(" class ") && verifyMethodSignature(line)) { // Should indicate a method definition
+          line.contains("(") && !line.contains(" class ") && verifyMethodSignature(line)) { // Should indicate a method definition
         Map<Integer, String> methodLines = new LinkedHashMap<>(); // Stores the lines of the method
         int lineIndex = lineEntry.getKey(); // Get the current line index
         methodLines.put(lineIndex, line); // Add the line to the method lines
@@ -104,6 +106,7 @@ public class FileReader {
    * Gets the methods from a file.
    *
    * @return A List containing maps containing line indexes and strings of lines in the detected method.
+   *
    * @throws IOException If the source file cannot be opened or read.
    */
   public List<Map<Integer, String>> getMethodsFromFile() throws IOException {
@@ -116,6 +119,7 @@ public class FileReader {
    * @param contentLines The lines for the given content.
    * @param type         The FileIndexType to detect. Assumes that if given type is not 'TYPE_FOR_LOOP', then 'TYPE_WHILE_LOOP'
    *                     is meant.
+   *
    * @return A list containing maps of the line numbers and lines contained in each loop.
    */
   public List<Map<Integer, String>> getLoopsFromContent(Map<Integer, String> contentLines, FileIndexType type) {
@@ -165,6 +169,7 @@ public class FileReader {
    * Checks whether a curly brace is contained within a string.
    *
    * @param line The line that you want to check.
+   *
    * @return Whether a curly brace is in a string, unless there's another outside the string for another block of code.
    */
   private boolean braceIsValid(final String line, final boolean checkingClosingBrace) {
@@ -201,6 +206,7 @@ public class FileReader {
    * Checks whether a given line is a method or not based off of if there is an '=' in the line.
    *
    * @param line The line that you want to check.
+   *
    * @return Whether the line is a method signature or not.
    */
   private boolean verifyMethodSignature(final String line) {
