@@ -46,8 +46,9 @@ public class DuplicateCodeDetector {
       // Start the detection and get the scores
       Detector mainDetector = new Detector(cliOptions.file1, cliOptions.file1);
       SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Get the scores
-      printData(scoreManager.getSimilarityScoreList());
-      userMenu(scoreManager);
+      scoreManager.sortSimilarityScoreList(); // Sort the scores in descending order
+      printData(scoreManager.getSimilarityScoreList()); // Display the scores to the user
+      userMenu(scoreManager); // Start the menu so the user can interact with the scores
     }
   }
 

@@ -7,6 +7,7 @@ import tech.sk3p7ic.detector.files.FileIndexPair;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -115,5 +116,23 @@ public class SimilarityScoreManager {
       }
     }
     return resultsList; // Return the filtered list of scores
+  }
+
+  /**
+   * Sorts the scores in descending order and reassigns the score IDs.
+   */
+  public void sortSimilarityScoreList() {
+    // Sort the scores
+    similarityScoreList.sort(new Comparator<SimilarityScore>() {
+      @Override
+      public int compare(SimilarityScore score1, SimilarityScore score2) {
+        return ((int) (score2.similarityScore * 10.0f) - (int) (score1.similarityScore * 10.0f));
+      }
+    });
+    System.out.println();
+    // Replace the score IDs
+    for (int i = currentScoreID - similarityScoreList.size(); i < currentScoreID; i++) {
+      similarityScoreList.get(i).scoreId = i;
+    }
   }
 }
