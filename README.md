@@ -20,19 +20,20 @@ Here's a semi-recent class diagram:
     - [X] Methods  
     - [X] For Loops  
     - [X] While Loops  
+      - *Note: While loops have been implemented, but do-while loops are still pending.*
     - [ ] Switch Statements  
     - [ ] If / Else if / Else Statements  
-- [ ] Attempt to gather which code statements are identical to each other by reading line-by-line the block(s) of code
+- [X] Attempt to gather which code statements are identical to each other by reading line-by-line the block(s) of code
       and attempting to use variables in those blocks to determine the context / use of the block(s) that is / are being
       analyzed.
     - *Note: A better solution than line-by-line reading is planned to be implemented.*
-- [ ] Generate a similarity score, `Similarity Score = (Number of Similar Code Statements)/(Number of Code Statements)`.
+- [X] Generate a similarity score, `Similarity Score = (Number of Similar Code Statements)/(Number of Code Statements)`.
       
 ### Display
 
-- [ ] If the Detector is being run as a console application, display a table to the user containing the location of the
+- [X] If the Detector is being run as a console application, display a table to the user containing the location of the
       duplicate blocks of code as well as their Similarity Scores. The table will be sorted by the Similarity Scores in
-      descending order.    
+      descending order.
 - [ ] If the Detector is being run with a GUI, display the table in a manner like that described in 3.1 and allow each
       entry in the table to be clicked on to “dig” into the similar blocks of code.
 
@@ -42,4 +43,4 @@ Here's a semi-recent class diagram:
     - `detection.SourceFormatter`
         - [ ] Allow for "//" in strings to not be counted as a comment.
     - `Detector`
-        - [ ] Generate similarity scores.
+        - [X] Generate similarity scores.
