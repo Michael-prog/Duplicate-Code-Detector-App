@@ -3,6 +3,7 @@ package tech.sk3p7ic.detector.detection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.sk3p7ic.detector.files.FileIndexPair;
+import tech.sk3p7ic.detector.files.FileIndexType;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class SimilarityScoreManager {
    * @return A list of SimilarityScores matching the given filter, unless a bad filter was given in which case null will
    * be returned.
    */
-  public List<SimilarityScore> filterScores(String filter, double filterValue) {
+  public List<SimilarityScore> filterScoresByNum(String filter, double filterValue) {
     List<SimilarityScore> resultsList = new ArrayList<>(); // Stores the scores matching the filter
     // Check if each score matches the given filter
     for (SimilarityScore score : similarityScoreList) {
@@ -116,6 +117,52 @@ public class SimilarityScoreManager {
       }
     }
     return resultsList; // Return the filtered list of scores
+  }
+
+  /**
+   * Filters scores based off of a given filter code and a value. This method is called when you want to filter results
+   * from a list that has already been filtered, such as to filter both for and while loops, for example.
+   *
+   * @param filter     A String containing "eq" (equals) or "ne" (not equals) used to filter results.
+   * @param filterType The FileIndexType that must be either matched or not matched by the given filter.
+   * @param inputList  The input list of scores to filter.
+   *
+   * @return A list of SimilarityScores matching the given filter, unless a bad filter was given in which case null will
+   * be returned.
+   */
+  public List<SimilarityScore> filterScoresByType(String filter, FileIndexType filterType,
+                                                  List<SimilarityScore> inputList) {
+    List<SimilarityScore> resultsList = new ArrayList<>(); // Stores the scores matching the filter
+    // Check if each score matches the given filter
+    for (SimilarityScore score : inputList) {
+      switch (filter) {
+        case "eq":
+          if (score.fileIndexPair1.fileIndexType == filterType || score.fileIndexPair2.fileIndexType == filterType)
+            resultsList.add(score);
+          break;
+        case "ne":
+          if (!(score.fileIndexPair1.fileIndexType == filterType && score.fileIndexPair2.fileIndexType == filterType))
+            resultsList.add(score);
+          break;
+        default:
+          return null; // Return null if there was an incorrect filter supplied
+      }
+    }
+    return resultsList; // Return the filtered list of scores
+  }
+
+  /**
+   * Filters scores based off of a given filter code and a value.
+   *
+   * @param filter     A String containing "eq" (equals) or "ne" (not equals) used to filter results.
+   * @param filterType The FileIndexType that must be either matched or not matched by the given filter.
+   *
+   * @return A list of SimilarityScores matching the given filter, unless a bad filter was given in which case null will
+   * be returned.
+   */
+  public List<SimilarityScore> filterScoresByType(String filter, FileIndexType filterType) {
+    // Filter scores from the main similarityScoreList
+    return filterScoresByType(filter, filterType, similarityScoreList);
   }
 
   /**

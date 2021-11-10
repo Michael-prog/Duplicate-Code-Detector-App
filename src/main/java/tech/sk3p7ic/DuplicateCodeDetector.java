@@ -7,13 +7,11 @@ import tech.sk3p7ic.cli.CliOptions;
 import tech.sk3p7ic.detector.Detector;
 import tech.sk3p7ic.detector.detection.SimilarityScore;
 import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
+import tech.sk3p7ic.detector.files.FileIndexType;
 import tech.sk3p7ic.gui.GraphicsLoader;
 
 import java.io.File;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class DuplicateCodeDetector {
   private static final Logger logger = LoggerFactory.getLogger(DuplicateCodeDetector.class);
@@ -194,11 +192,78 @@ public class DuplicateCodeDetector {
     try {
       // Split the command and attempt to get the results of the filter
       String[] command = userInput.split(" ");
-      List<SimilarityScore> resultsList = scoreManager.filterScores(command[1], Double.parseDouble(command[2]));
-      if (!(resultsList == null)) // Print the results
-        printData(resultsList);
-      else // If the user gave an invalid filter
-        printHelp();
+      String filter = command[1];
+      try {
+        double filterValue = Double.parseDouble(command[2]); // Attempt to parse second value to double
+        List<SimilarityScore> resultsList = scoreManager.filterScoresByNum(filter, filterValue);
+        if (!(resultsList == null)) // Print the results
+          printData(resultsList);
+        else // If the user gave an invalid filter
+          printHelp();
+      } catch (NumberFormatException e) { // If there was an error parsing the input to double
+        String filterValueString = command[2]; // The value that the user wants to filter by
+        // Turn the filterValueString into a FileIndexType and filter
+        FileIndexType filterValueType;
+        List<SimilarityScore> resultsList;
+        switch (filterValueString) {
+          case "class": case "type_class":
+            filterValueType = FileIndexType.TYPE_CLASS;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          case "method": case "type_method":
+            filterValueType = FileIndexType.TYPE_METHOD;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          case "loop":
+            if (filter.equals("ne")) {
+              List<SimilarityScore> tempResultsList; // Temp list to store results in case of multiple filters
+              // Get the for loops
+              filterValueType = FileIndexType.TYPE_FOR_LOOP;
+              tempResultsList = scoreManager.filterScoresByType(filter, filterValueType);
+              // Get the while loops
+              filterValueType = FileIndexType.TYPE_WHILE_LOOP;
+              tempResultsList = scoreManager.filterScoresByType(filter, filterValueType, tempResultsList);
+              // Get the do-while loops
+              filterValueType = FileIndexType.TYPE_DO_WHILE_LOOP;
+              tempResultsList = scoreManager.filterScoresByType(filter, filterValueType, tempResultsList);
+              resultsList = tempResultsList;
+            } else { // Filter is "eq"
+              // Get the for loops
+              filterValueType = FileIndexType.TYPE_FOR_LOOP;
+              resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+              // Get the while loops
+              filterValueType = FileIndexType.TYPE_WHILE_LOOP;
+              resultsList.addAll(scoreManager.filterScoresByType(filter, filterValueType));
+              // Get the do-while loops
+              filterValueType = FileIndexType.TYPE_DO_WHILE_LOOP;
+              resultsList.addAll(scoreManager.filterScoresByType(filter, filterValueType));
+            }
+            break;
+          case "for": case "type_for_loop":
+            filterValueType = FileIndexType.TYPE_FOR_LOOP;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          case "while": case "type_while_loop":
+            filterValueType = FileIndexType.TYPE_WHILE_LOOP;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          case "do-while": case "type_do_while":
+            filterValueType = FileIndexType.TYPE_DO_WHILE_LOOP;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          case "switch": case "type_switch":
+            filterValueType = FileIndexType.TYPE_SWITCH;
+            resultsList = scoreManager.filterScoresByType(filter, filterValueType);
+            break;
+          default:
+            printHelp();
+            return; // Return null to end the method call
+        }
+        if (!(resultsList == null)) // Print the results
+          printData(resultsList);
+        else // If the user gave an invalid filter
+          printHelp();
+      }
     } catch (Exception e) {
       logger.error(e.getMessage());
     }
