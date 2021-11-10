@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SimilarityScore {
-  public final int scoreId;
+  public int scoreId; // Not final because the score ID may change if the source list is sorted
   public final float similarityScore;
   public final File sourceFile1;
   public final File sourceFile2;
