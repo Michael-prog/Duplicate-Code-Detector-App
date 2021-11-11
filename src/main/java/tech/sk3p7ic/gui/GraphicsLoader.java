@@ -8,21 +8,24 @@ import java.awt.*;
 
 public class GraphicsLoader extends JFrame {
 
+  /**
+   * Creates a new GraphicsLoader object. Essentially, this is the root JFrame for the application.
+   */
   private GraphicsLoader() {
-    this.setTitle("Duplicate Code Detector");
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setResizable(false);
+    this.setTitle("Duplicate Code Detector"); // Set frame (window) title
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Allow the frame to close on exit
+    this.setResizable(false); // Prevent resizing the frame
     this.getContentPane().setBackground(new Color(AppColors.MAIN_BG_DARK.getColor()));
     this.setLocationRelativeTo(null);
-    this.setVisible(true);
-    this.setExtendedState(this.getExtendedState() | Frame.MAXIMIZED_BOTH);
+    this.setVisible(true); // Show the frame
+    this.setExtendedState(this.getExtendedState() | Frame.MAXIMIZED_BOTH); // Maximize the frame
   }
 
   /**
    * Starts the Graphical User Interface (GUI) for the program.
    */
   public static void start() {
-    GraphicsLoader rootFrame = new GraphicsLoader();
-    rootFrame.add(new MainMenuView(rootFrame));
+    GraphicsLoader rootFrame = new GraphicsLoader(); // Get the root frame
+    rootFrame.add(new MainMenuView(rootFrame)); // Show the main menu
   }
 }

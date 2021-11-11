@@ -8,9 +8,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuView extends CenteredMenuView {
-  private static JButton startDetectionButton;
-  private static JButton loadProjectButton;
+  private static JButton startDetectionButton; // "Start New Detection" button
+  private static JButton loadProjectButton; // "Load DCD Project" button
 
+  /**
+   * Creates a new JPanel using the CenteredMenuView. This class allows for the creation of the main menu that the
+   * program will load into on GUI mode.
+   *
+   * @param rootFrame The root JFrame that this JPanel will be displayed on.
+   */
   public MainMenuView(JFrame rootFrame) {
     super(rootFrame, rootFrame.getTitle()); // Keep the title the same
     super.addTitleLabel("Duplicate Code Detector");
@@ -31,7 +37,11 @@ public class MainMenuView extends CenteredMenuView {
     return buttonsPanel;
   }
 
-  public JButton getStartDetectionButton() { return startDetectionButton; }
+  public JButton getStartDetectionButton() {
+    return startDetectionButton;
+  }
 
-  public JButton getLoadProjectButton() { return loadProjectButton; }
+  public JButton getLoadProjectButton() {
+    return loadProjectButton;
+  }
 }

@@ -8,15 +8,28 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FileSelectionView extends CenteredMenuView {
+  /**
+   * Sets the mode to display the menu that allows the user to choose either a project file or new file(s).
+   * <p>
+   * MODE_SELECT_NEW_FILES sets the menu into a mode to choose new file(s) to scan.
+   * MODE_SELECT_PROJECT   sets the menu into a mode to choose a project file from a previous scan to load.
+   */
   public enum ViewModes {
     MODE_SELECT_NEW_FILES,
     MODE_SELECT_PROJECT
   }
 
-  private JButton advanceButton;
-  private JButton cancelButton;
-  private ViewModes viewMode;
+  private JButton advanceButton; // The "Continue" button
+  private JButton cancelButton; // The "Cancel" button
+  private ViewModes viewMode; // The mode this this menu will be set to
 
+  /**
+   * Creates a new JPanel using the CenteredMenuView. This class allows the user to choose the files that will be used
+   * by the program, either being a project file or a new file(s) to scan.
+   *
+   * @param viewMode  The mode that this menu will be set to.
+   * @param rootFrame The root JFrame that this JPanel will be displayed on.
+   */
   public FileSelectionView(ViewModes viewMode, JFrame rootFrame) {
     super(rootFrame, rootFrame.getTitle()); // Keep the title the same
     this.viewMode = viewMode; // Set the view mode for this instance
