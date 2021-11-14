@@ -100,8 +100,9 @@ public class SourceFile {
         // Add the for loops
         for (Map<Integer, String> forLoop : forLoopsList) {
           Object[] forLineIndexSet = forLoop.keySet().toArray();
-          if (startingIndexSet.contains(forLineIndexSet[0])) continue; // If the loop has already been added, skip it
-          else startingIndexSet.add((int) forLineIndexSet[0]); // If the loop has not been added, add it to the set
+          int startingIndex = (int) forLineIndexSet[0]; // The index that the loop starts at
+          if (startingIndexSet.contains(startingIndex)) continue; // If the loop has already been added, skip it
+          else startingIndexSet.add(startingIndex); // If the loop has not been added, add it to the set
           fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_FOR_LOOP, (int) forLineIndexSet[0],
               (int) forLineIndexSet[forLoop.size() - 1], forLoop));
         }
@@ -117,8 +118,9 @@ public class SourceFile {
         // Add the while loops
         for (Map<Integer, String> whileLoop : whileLoopsList) {
           Object[] whileLineIndexSet = whileLoop.keySet().toArray();
-          if (startingIndexSet.contains(whileLineIndexSet[0])) continue;
-          else startingIndexSet.add((int) whileLineIndexSet[0]);
+          int startingIndex = (int) whileLineIndexSet[0];
+          if (startingIndexSet.contains(startingIndex)) continue;
+          else startingIndexSet.add(startingIndex);
           fileIndexPairs.add(new FileIndexPair(FileIndexType.TYPE_WHILE_LOOP, (int) whileLineIndexSet[0],
               (int) whileLineIndexSet[whileLoop.size() - 1], whileLoop));
         }
