@@ -277,6 +277,18 @@ public class DuplicateCodeDetector {
     System.out.println("filter [gt,lt,ge,le,eq] <value> : Filter the output by a given value that is");
     System.out.println("                                  either greater than, less than, greater equal,");
     System.out.println("                                  less equal, or equal to the given value.");
+    System.out.println("filter [eq, ne] <type>          : Filter the output by a given type that is");
+    System.out.println("                                  either equal to or not equal to the given type.");
+    System.out.println("    Valid values of <type>:");
+    System.out.println("    +-- class, type_class       : Results containing TYPE_CLASS.");
+    System.out.println("    +-- method, type_method     : Results containing TYPE_METHOD.");
+    System.out.println("    +-- loop                    : Results containing TYPE_FOR_LOOP,");
+    System.out.println("    |                                                TYPE_WHILE_LOOP,");
+    System.out.println("    |                                                TYPE_DO_WHILE_LOOP.");
+    System.out.println("    +-- for, type_for_loop      : Results containing TYPE_FOR_LOOP.");
+    System.out.println("    +-- while, type_while_loop  : Results containing TYPE_WHILE_LOOP.");
+    System.out.println("    +-- do-while, type_do_while : Results containing TYPE_DO_WHILE_LOOP.");
+    System.out.println("    +-- switch, type_switch     : Results containing TYPE_SWITCH.");
     System.out.println("dig <scoreId>                   : \"Dig\" into a similarity score to view");
     System.out.println("                                  similar blocks of code.");
     System.out.println("exit                            : Exit the program.");
