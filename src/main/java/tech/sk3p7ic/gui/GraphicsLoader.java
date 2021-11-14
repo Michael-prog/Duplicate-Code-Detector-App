@@ -1,6 +1,8 @@
 package tech.sk3p7ic.gui;
 
+import tech.sk3p7ic.gui.controllers.MainMenuController;
 import tech.sk3p7ic.gui.res.AppColors;
+import tech.sk3p7ic.gui.views.FileSelectionView;
 import tech.sk3p7ic.gui.views.MainMenuView;
 
 import javax.swing.*;
@@ -26,6 +28,8 @@ public class GraphicsLoader extends JFrame {
    */
   public static void start() {
     GraphicsLoader rootFrame = new GraphicsLoader(); // Get the root frame
-    rootFrame.add(new MainMenuView(rootFrame)); // Show the main menu
+    MainMenuController mainMenuController = new MainMenuController(rootFrame);
+    mainMenuController.add_startDetectionButton_handler();
+    rootFrame.add(mainMenuController); // Show the main menu
   }
 }

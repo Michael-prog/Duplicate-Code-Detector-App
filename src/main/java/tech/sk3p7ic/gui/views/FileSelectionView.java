@@ -33,6 +33,7 @@ public class FileSelectionView extends CenteredMenuView {
   public FileSelectionView(ViewModes viewMode, JFrame rootFrame) {
     super(rootFrame, rootFrame.getTitle()); // Keep the title the same
     this.viewMode = viewMode; // Set the view mode for this instance
+    this.add(createMenuPanel(), super.getConstraints());
   }
 
   @Override
