@@ -173,7 +173,7 @@ public class SimilarityScoreManager {
     similarityScoreList.sort(new Comparator<SimilarityScore>() {
       @Override
       public int compare(SimilarityScore score1, SimilarityScore score2) {
-        return ((int) (score2.similarityScore * 10.0f) - (int) (score1.similarityScore * 10.0f));
+        return ((int) (score2.similarityScore * 1000.0f) - (int) (score1.similarityScore * 1000.0f));
       }
     });
     System.out.println();
