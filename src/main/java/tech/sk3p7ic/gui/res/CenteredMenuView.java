@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class CenteredMenuView extends JPanel {
-  private GridBagConstraints gridBagConstraints; // Stores the constraints for the layout in this JPanel
+  public GridBagConstraints gridBagConstraints; // Stores the constraints for the layout in this JPanel
 
   /**
    * Creates a new JPanel with centered content.
