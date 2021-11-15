@@ -1,5 +1,9 @@
 package tech.sk3p7ic.gui.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import tech.sk3p7ic.detector.Detector;
+import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 import tech.sk3p7ic.gui.res.AppColors;
 import tech.sk3p7ic.gui.res.CenteredMenuView;
 import tech.sk3p7ic.gui.views.FileSelectionView;
@@ -10,6 +14,7 @@ import java.awt.*;
 import java.io.File;
 
 public class FileSelectionController extends FileSelectionView {
+  private static final Logger logger = LoggerFactory.getLogger(FileSelectionController.class);
   private JFrame rootFrame; // The root frame for the app
   private JButton advanceButton; // The "Continue" button
   private JButton cancelButton; // The "Cancel" button
@@ -76,8 +81,15 @@ public class FileSelectionController extends FileSelectionView {
           errorLabel.setForeground(new Color(AppColors.ACCENT_0.getColor()));
           super.add(errorLabel, super.getConstraints());
           super.show();
-        } else {
-          System.out.println("I'm gonna do something.");
+        } else { // Run the detection
+          try {
+            Detector mainDetector = new Detector(file1, file2); // Create the detector
+            SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Attempt to get the scores
+            // TODO: Display the scores to the user
+          } catch (Exception e) {
+            logger.error("Cannot start detection!");
+            logger.error(e.getMessage());
+          }
         }
       } else {
         if (projectFile == null) { // if both files have not been set yet

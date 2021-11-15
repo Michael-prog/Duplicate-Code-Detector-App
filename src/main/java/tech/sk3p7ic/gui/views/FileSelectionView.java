@@ -57,6 +57,10 @@ public class FileSelectionView extends CenteredMenuView {
     return selectionPanel;
   }
 
+  /**
+   * Gets the JPanel containing the inputs for selecting files.
+   * @return The JPanel with with inputs used for selecting files.
+   */
   private JPanel getFileInputPanel() {
     JPanel fileInputPanel = new JPanel(); // The JPanel that stores the file selection labels and buttons
     if (viewMode == ViewModes.MODE_SELECT_NEW_FILES) { // If the user is trying to scan new files
