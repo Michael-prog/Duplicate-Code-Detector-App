@@ -86,6 +86,10 @@ public class FileSelectionController extends FileSelectionView {
             Detector mainDetector = new Detector(file1, file2); // Create the detector
             SimilarityScoreManager scoreManager = mainDetector.generateSimilarityScores(); // Attempt to get the scores
             // TODO: Display the scores to the user
+            ScoreMenuController scoreView = new ScoreMenuController(rootFrame, scoreManager);
+            this.hide();
+            rootFrame.add(scoreView);
+            scoreView.show();
           } catch (Exception e) {
             logger.error("Cannot start detection!");
             logger.error(e.getMessage());
