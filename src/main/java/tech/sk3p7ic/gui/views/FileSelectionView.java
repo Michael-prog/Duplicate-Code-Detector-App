@@ -24,6 +24,7 @@ public class FileSelectionView extends CenteredMenuView {
   private JButton file1Button; // To select the first file to use
   private JButton file2Button; // To select the second file to use
   private JButton projectFileButton; // To select a project file
+  private JLabel errorLabel; // The label that displays error messages
   private ViewModes viewMode; // The mode this this menu will be set to
 
   /**
@@ -51,9 +52,11 @@ public class FileSelectionView extends CenteredMenuView {
     // Create the buttons as RoundedButtons and add
     advanceButton = new RoundedButton("Continue", true, 20);
     cancelButton = new RoundedButton("Cancel", false, 20);
+    errorLabel = new JLabel();
     selectionPanel.add(getFileInputPanel(), super.getConstraints());
     selectionPanel.add(advanceButton, super.getConstraints());
     selectionPanel.add(cancelButton, super.getConstraints());
+    selectionPanel.add(errorLabel, super.getConstraints());
     return selectionPanel;
   }
 
@@ -114,5 +117,9 @@ public class FileSelectionView extends CenteredMenuView {
 
   public ViewModes getViewMode() {
     return viewMode;
+  }
+
+  public JLabel getErrorLabel() {
+    return errorLabel;
   }
 }

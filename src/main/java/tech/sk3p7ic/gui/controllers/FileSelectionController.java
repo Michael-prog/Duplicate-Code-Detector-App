@@ -21,6 +21,7 @@ public class FileSelectionController extends FileSelectionView {
   private JButton file1Button; // To select the first file to use
   private JButton file2Button; // To select the second file to use
   private JButton projectFileButton; // To select a project file
+  private JLabel errorLabel; // Stores error text
   private File file1; // The File for the first button
   private File file2; // The File for the second button
   private File projectFile; // The File for the .dcd project
@@ -33,6 +34,7 @@ public class FileSelectionController extends FileSelectionView {
     // Get the components from the superclass
     advanceButton = super.getAdvanceButton();
     cancelButton = super.getCancelButton();
+    errorLabel = super.getErrorLabel();
     file1Button = super.getFile1Button();
     file2Button = super.getFile2Button();
     projectFileButton = super.getProjectFileButton();
@@ -77,10 +79,8 @@ public class FileSelectionController extends FileSelectionView {
     advanceButton.addActionListener(actionEvent -> {
       if (super.getViewMode() == ViewModes.MODE_SELECT_NEW_FILES) {
         if (file1 == null || file2 == null) { // if both files have not been set yet
-          JLabel errorLabel = new JLabel("<html><p><strong>PLEASE SELECT BOTH FILES.</strong></p></html>");
+          errorLabel.setText("<html><p><strong>PLEASE SELECT BOTH FILES.</strong></p></html>");
           errorLabel.setForeground(new Color(AppColors.ACCENT_0.getColor()));
-          super.add(errorLabel, super.getConstraints());
-          super.show();
         } else { // Run the detection
           try {
             Detector mainDetector = new Detector(file1, file2); // Create the detector
