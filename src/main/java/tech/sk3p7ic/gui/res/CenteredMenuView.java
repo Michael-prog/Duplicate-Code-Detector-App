@@ -19,12 +19,6 @@ public abstract class CenteredMenuView extends JPanel {
     gridBagConstraints = new GridBagConstraints(); // Create the constraints of the layout
   }
 
-  /**
-   * Adds the title text to the layout. Should be the first method called after class instantiation otherwise the
-   * constraints may have changed and the title will therefore be incorrectly displayed.
-   *
-   * @param text String containing the text that will be displayed in the title JLabel.
-   */
   public void addTitleLabel(String text) {
     text = "<html><strong><h1>" + text + "</h1></strong></html>"; // Format the text to be bold
     JLabel titleLabel = new JLabel(text); // Create the title label
