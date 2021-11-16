@@ -24,8 +24,9 @@ public class MainMenuView extends CenteredMenuView {
     // Add credits label
     JLabel creditsLabel = new JLabel("<html><p><em>Joshua Ibrom (sk3p7ic), Mitchell Ludolf</em></p></html>");
     creditsLabel.setForeground(new Color(AppColors.MAIN_FG_DARK.getColor()));
-    super.gridBagConstraints.anchor = GridBagConstraints.SOUTH;
+    super.gridBagConstraints.anchor = GridBagConstraints.PAGE_END;
     super.gridBagConstraints.weighty = 0;
+    super.gridBagConstraints.fill = GridBagConstraints.PAGE_END;
     this.add(creditsLabel, super.getConstraints());
   }
 
