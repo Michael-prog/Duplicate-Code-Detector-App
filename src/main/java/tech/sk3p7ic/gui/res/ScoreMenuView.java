@@ -115,7 +115,7 @@ public abstract class ScoreMenuView extends JPanel {
     return buttonsPanel;
   }
 
-  public abstract JPanel createMainInnerPanel();
+  public abstract JPanel createMainInnerPanel(SimilarityScoreManager scoreManager, int scoreId);
 
   public JTable getScoresTable() {
     return scoresTable;

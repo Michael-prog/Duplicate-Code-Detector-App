@@ -8,11 +8,15 @@ import java.awt.*;
 
 public class ScoreMenuController extends MainScoreView {
   private JFrame rootFrame; // The root frame for the app
+  private final SimilarityScoreManager scoreManager;
 
   public ScoreMenuController(JFrame rootFrame, SimilarityScoreManager scoreManager) {
     super(rootFrame);
     this.rootFrame = rootFrame;
+    this.scoreManager = scoreManager;
     super.add(createScoreSidebar(scoreManager), BorderLayout.BEFORE_LINE_BEGINS);
+    updateScoreDisplayPanel();
+    super.add(getInnerPanel(), BorderLayout.CENTER);
     addScoreScrollButtonHandlers();
   }
 
@@ -27,6 +31,7 @@ public class ScoreMenuController extends MainScoreView {
       if (getScoresTable().getSelectedRow() == getScoresTable().getRowCount() -1) getNextButton().setEnabled(false);
       // Enable the previous button if it was disabled
       if (!getPrevButton().isEnabled()) getPrevButton().setEnabled(true);
+      updateScoreDisplayPanel();
     });
     getPrevButton().addActionListener(actionEvent -> {
       int currentRow = getScoresTable().getSelectedRow();
@@ -35,6 +40,12 @@ public class ScoreMenuController extends MainScoreView {
       if (getScoresTable().getSelectedRow() == 0) getPrevButton().setEnabled(false);
       // Enable the next button if it was disabled
       if (!getNextButton().isEnabled()) getNextButton().setEnabled(true);
+      updateScoreDisplayPanel();
     });
+  }
+
+  private void updateScoreDisplayPanel() {
+    int currentRow = getScoresTable().getSelectedRow();
+    setInnerPanel(super.createMainInnerPanel(scoreManager, currentRow));
   }
 }
