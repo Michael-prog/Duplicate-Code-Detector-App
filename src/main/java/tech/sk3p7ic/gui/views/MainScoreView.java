@@ -40,6 +40,10 @@ public class MainScoreView extends ScoreMenuView {
   }
 
   public void setInnerPanel(JPanel panel) {
+    if (innerPanel != null) super.remove(innerPanel);
     innerPanel = panel;
+    super.add(innerPanel);
+    super.validate();
+    super.repaint();
   }
 }
