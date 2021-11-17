@@ -8,6 +8,11 @@ import java.awt.*;
 import java.util.Vector;
 
 public abstract class ScoreMenuView extends JPanel {
+  private JTable scoresTable;
+  private JScrollPane scoresPane;
+  private JButton prevButton;
+  private JButton nextButton;
+
   public ScoreMenuView(JFrame rootFrame, String titleText) {
     rootFrame.setTitle(titleText); // Set / change the title
     this.setLayout(new BorderLayout());
@@ -47,11 +52,15 @@ public abstract class ScoreMenuView extends JPanel {
               score.fileIndexPair1.fileIndexType.toString(), score.fileIndexPair2.fileIndexType.toString())
       );
     }
-    JTable scoresTable = new JTable(scoresVector, headersVector);
-    JScrollPane scoresPane = new JScrollPane(scoresTable);
+    scoresTable = new JTable(scoresVector, headersVector);
+    scoresTable.setSelectionBackground(new Color(AppColors.ACCENT_1.getColor())); // Change the selection color
+    scoresTable.setSelectionForeground(new Color(AppColors.MAIN_FG_DARK.getColor()));
+    scoresTable.setRowSelectionInterval(0, 0); // Select the first row
+    scoresPane = new JScrollPane(scoresTable);
     // Change the font
     scoresPane.getViewport().getView().setFont(new Font("Courier New", Font.PLAIN, 12));
     scoresPane.getViewport().getView().setBackground(new Color(AppColors.MAIN_FG_DARK.getColor()));
+    scoresPane.getViewport().getView().setForeground(new Color(AppColors.MAIN_BG_DARK.getColor()));
     sidebarPanel.add(scoresPane);
     return sidebarPanel;
   }
@@ -92,11 +101,11 @@ public abstract class ScoreMenuView extends JPanel {
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
     buttonsPanel.setBackground(new Color(AppColors.BG_DARK_0.getColor()));
     // Create the buttons and set their font size to be 20
-    JButton prevButton = new RoundedButton("< Prev", false, 10);
+    prevButton = new RoundedButton("< Prev", false, 10);
     prevButton.setForeground(new Color(AppColors.MAIN_FG_DARK.getColor()));
-    final Font currentFont = prevButton.getFont();
+    final Font currentFont = prevButton.getFont(); // Get the current font for the button
     prevButton.setFont(new Font(currentFont.getName(), currentFont.getStyle(), 20));
-    JButton nextButton = new RoundedButton("Next >", false, 10);
+    nextButton = new RoundedButton("Next >", false, 10);
     nextButton.setFont(new Font(currentFont.getName(), currentFont.getStyle(), 20));
     nextButton.setForeground(new Color(AppColors.MAIN_FG_DARK.getColor()));
     // Add the buttons and return
@@ -107,4 +116,20 @@ public abstract class ScoreMenuView extends JPanel {
   }
 
   public abstract JPanel createMainInnerPanel();
+
+  public JTable getScoresTable() {
+    return scoresTable;
+  }
+
+  public JScrollPane getScoresPane() {
+    return scoresPane;
+  }
+
+  public JButton getPrevButton() {
+    return prevButton;
+  }
+
+  public JButton getNextButton() {
+    return nextButton;
+  }
 }
