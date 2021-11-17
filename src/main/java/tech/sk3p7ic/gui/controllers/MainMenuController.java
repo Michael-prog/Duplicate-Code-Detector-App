@@ -1,6 +1,5 @@
 package tech.sk3p7ic.gui.controllers;
 
-import tech.sk3p7ic.gui.res.CenteredMenuView;
 import tech.sk3p7ic.gui.views.FileSelectionView;
 import tech.sk3p7ic.gui.views.MainMenuView;
 
@@ -17,13 +16,25 @@ public class MainMenuController extends MainMenuView {
     // Get the buttons from the main menu
     startDetectionButton = super.getStartDetectionButton();
     loadProjectButton = super.getLoadProjectButton();
-    // Add the handlers to the buttons
   }
 
   public void add_startDetectionButton_handler() {
     startDetectionButton.addActionListener(actionEvent -> {
-      rootFrame.remove(this); // Remove the view that's currently being displayed
-      CenteredMenuView menuView = new FileSelectionView(FileSelectionView.ViewModes.MODE_SELECT_NEW_FILES, rootFrame);
+      this.hide();
+      FileSelectionController menuView = new FileSelectionController(FileSelectionView.ViewModes.MODE_SELECT_NEW_FILES, rootFrame, this);
+      menuView.addScanFileButtonHandlers();
+      menuView.addOtherButtonHandlers();
+      rootFrame.add(menuView); // Add the new view
+      menuView.show();
+    });
+  }
+
+  public void add_loadProjectButton_handler() {
+    loadProjectButton.addActionListener(actionEvent -> {
+      this.hide();
+      FileSelectionController menuView = new FileSelectionController(FileSelectionView.ViewModes.MODE_SELECT_PROJECT, rootFrame, this);
+      menuView.addProjectFileButtonHandler();
+      menuView.addOtherButtonHandlers();
       rootFrame.add(menuView); // Add the new view
       menuView.show();
     });

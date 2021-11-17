@@ -8,8 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuView extends CenteredMenuView {
-  private static JButton startDetectionButton; // "Start New Detection" button
-  private static JButton loadProjectButton; // "Load DCD Project" button
+  private JButton startDetectionButton; // "Start New Detection" button
+  private JButton loadProjectButton; // "Load DCD Project" button
 
   /**
    * Creates a new JPanel using the CenteredMenuView. This class allows for the creation of the main menu that the
@@ -21,6 +21,13 @@ public class MainMenuView extends CenteredMenuView {
     super(rootFrame, rootFrame.getTitle()); // Keep the title the same
     super.addTitleLabel("Duplicate Code Detector");
     this.add(createMenuPanel(), super.getConstraints());
+    // Add credits label
+    JLabel creditsLabel = new JLabel("<html><p><em>Joshua Ibrom (sk3p7ic), Mitchell Ludolf</em></p></html>");
+    creditsLabel.setForeground(new Color(AppColors.MAIN_FG_DARK.getColor()));
+    super.gridBagConstraints.anchor = GridBagConstraints.PAGE_END;
+    super.gridBagConstraints.weighty = 0;
+    super.gridBagConstraints.fill = GridBagConstraints.PAGE_END;
+    this.add(creditsLabel, super.getConstraints());
   }
 
   @Override

@@ -29,7 +29,9 @@ public class GraphicsLoader extends JFrame {
   public static void start() {
     GraphicsLoader rootFrame = new GraphicsLoader(); // Get the root frame
     MainMenuController mainMenuController = new MainMenuController(rootFrame);
+    // Add handlers for the buttons
     mainMenuController.add_startDetectionButton_handler();
+    mainMenuController.add_loadProjectButton_handler();
     rootFrame.add(mainMenuController); // Show the main menu
   }
 }
