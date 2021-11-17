@@ -5,6 +5,7 @@ import tech.sk3p7ic.detector.detection.SimilarityScoreManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Vector;
 
 public abstract class ScoreMenuView extends JPanel {
   public ScoreMenuView(JFrame rootFrame, String titleText) {
@@ -33,21 +34,51 @@ public abstract class ScoreMenuView extends JPanel {
     sidebarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a margin
     sidebarPanel.setBackground(new Color(AppColors.BG_DARK_0.getColor())); // Change the background color
     sidebarPanel.add(createScoreSidebarButtonsPanel()); // Create the buttons to flip through scores and add
-    // Get the information about SimilarityScores to display as a list in the sidebar
-    DefaultListModel<String> rawScoresList = new DefaultListModel<>();
+    // Make a table of the scores
+    Vector<Vector<String>> scoresVector = new Vector<>(); // Stores the properties of the score
+    Vector<String> headersVector = new VectorBuilder<String>().addAll("ID", "Score", "File 1 Name", "File 2 Name",
+        "File 1 Index Type", "File 2 Index Type"); // Stores the column headers for the table
+    // Get the data from the scores
     for (SimilarityScore score : scoreManager.getSimilarityScoreList()) {
-      String scoreString = String.format("| %-5d | %-5.2f | %-15s | %-15s | %-20s | %-20s |%n", score.scoreId,
-          score.similarityScore, score.sourceFile1.getName(), score.sourceFile2.getName(),
-          score.fileIndexPair1.fileIndexType, score.fileIndexPair2.fileIndexType);
-      rawScoresList.addElement(scoreString);
+      scoresVector.add(new VectorBuilder<String>()
+          .addItem(String.valueOf(score.scoreId))
+          .addItem(String.format("%.2f", score.similarityScore)) // Add the score with 2 decimal places
+          .addAll(score.sourceFile1.getName(), score.sourceFile2.getName(),
+              score.fileIndexPair1.fileIndexType.toString(), score.fileIndexPair2.fileIndexType.toString())
+      );
     }
-    // Parse the list into a JList and add to a JScrollPane so that the scores may be displayed
-    JList<String> scoreList = new JList<>(rawScoresList);
-    JScrollPane scoresPane = new JScrollPane(scoreList);
+    JTable scoresTable = new JTable(scoresVector, headersVector);
+    JScrollPane scoresPane = new JScrollPane(scoresTable);
     // Change the font
     scoresPane.getViewport().getView().setFont(new Font("Courier New", Font.PLAIN, 12));
+    scoresPane.getViewport().getView().setBackground(new Color(AppColors.MAIN_FG_DARK.getColor()));
     sidebarPanel.add(scoresPane);
     return sidebarPanel;
+  }
+
+  private static class VectorBuilder<T> extends Vector<T> {
+    /**
+     * Adds an element to the Vector and returns the current Vector.
+     * Thanks to https://stackoverflow.com/q/18362150 for sharing this method of doing things.
+     *
+     * @param element The element to add to the Vector.
+     * @return The current Vector that has been made.
+     */
+    public VectorBuilder<T> addItem(final T element) {
+      addElement(element);
+      return this;
+    }
+
+    /**
+     * Takes in a variable number of elements, adds them to the Vector, and returns the current Vector.
+     * @param elements The element(s) to add to the Vector.
+     * @return The current Vector that has been made.
+     */
+    @SafeVarargs
+    public final VectorBuilder<T> addAll(final T... elements) {
+      for (T element : elements) addElement(element);
+      return this;
+    }
   }
 
   /**
